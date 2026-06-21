@@ -209,7 +209,7 @@
   .mira-head .who{flex:1}
   .mira-head .who b{font-family:var(--serif);font-size:19px;font-weight:600;display:block;line-height:1.1}
   .mira-head .who span{font-size:12px;opacity:.75;letter-spacing:.03em}
-  .mira-x{background:transparent;border:0;color:var(--white);font-size:22px;cursor:pointer;opacity:.8;line-height:1}
+  .mira-x{background:transparent;border:0;color:var(--white);font-size:24px;cursor:pointer;opacity:.8;line-height:1;width:44px;height:44px;display:flex;align-items:center;justify-content:center;margin:-8px -10px -8px 0}
   .mira-x:hover{opacity:1}
   .mira-log{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px}
   .mmsg{max-width:84%;padding:11px 14px;border-radius:14px;font-size:14.5px;line-height:1.5}
@@ -218,7 +218,7 @@
   .mmsg a{color:var(--teal);font-weight:600}
   .mmsg.user a{color:var(--amber)}
   .mira-chips{display:flex;flex-wrap:wrap;gap:8px;padding:0 18px 12px}
-  .mira-chip{background:transparent;border:1px solid var(--teal-light);color:var(--teal);font-family:var(--sans);font-size:12.5px;font-weight:500;padding:8px 13px;border-radius:30px;cursor:pointer;transition:.15s}
+  .mira-chip{background:transparent;border:1px solid var(--teal-light);color:var(--teal);font-family:var(--sans);font-size:12.5px;font-weight:500;padding:10px 14px;min-height:40px;display:inline-flex;align-items:center;border-radius:30px;cursor:pointer;transition:.15s}
   .mira-chip:hover{background:var(--teal);color:var(--white)}
   .mira-in{display:flex;gap:8px;padding:14px 16px;border-top:1px solid rgba(var(--line-rgb),.12);background:var(--blush-light)}
   .mira-in input{flex:1;border:1px solid rgba(var(--line-rgb),.2);border-radius:24px;padding:11px 16px;font-family:var(--sans);font-size:14px;outline:none}
@@ -306,14 +306,15 @@
     .topbar{padding:10px 14px;gap:10px}
     .topbar .brand{display:none}
     .progress-label{min-width:auto;font-size:11px}
-    .btn-amber,.reset-btn{padding:8px 11px;font-size:10px}
+    .btn-amber,.reset-btn,.theme-btn{padding:10px 12px;font-size:11px;min-height:40px}
     .wrap{padding:0 16px}
     .cover{padding:64px 20px 58px}
     .tool,.about,.faq-item,.pulse{padding:28px 22px}
     .tool h2,.about h2,.pulse h2,.faq h2{font-size:25px}
     .intro .lead{font-size:21px}
-    .scale{gap:6px}
-    .scale button{width:36px;height:36px;font-size:14px}
+    .rating{flex-direction:column;align-items:flex-start;gap:10px}
+    .scale{gap:8px;width:100%}
+    .scale button{width:44px;height:44px;font-size:15px}
     .matrix{grid-template-columns:1fr;gap:16px}
     .cta-buttons{flex-direction:column}
     .btn-cta,.btn-ghost{width:100%}
@@ -321,6 +322,7 @@
     .nav-btn{flex:1;text-align:center}
     .mascot{right:12px;bottom:12px;max-width:78vw}
     .mascot-fig{width:52px;height:68px}
+    body{padding-bottom:96px}
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -403,7 +405,7 @@
    html[data-theme="dark"] .sel{background:#1d2a22}
   }
   /* theme toggle button */
-  .theme-btn{background:none;border:1px solid rgba(255,255,255,.25);color:var(--white);font-size:14px;line-height:1;padding:6px 10px;border-radius:4px;cursor:pointer;transition:.2s}
+  .theme-btn{background:none;border:1px solid rgba(255,255,255,.25);color:var(--white);font-size:15px;line-height:1;padding:8px 11px;border-radius:4px;cursor:pointer;transition:.2s}
   .theme-btn:hover{background:rgba(255,255,255,.1)}
 </style>
 <script>(function(){try{var t=localStorage.getItem('iaw-theme');if(!t)t=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
@@ -649,7 +651,7 @@
     <div class="field"><label>Where do you still feel stuck?</label><textarea data-id="pulse_stuck"></textarea></div>
     <div class="field"><label>What do you feel ready for next?</label><textarea data-id="pulse_ready"></textarea></div>
     <div class="field"><label>What do you think you're still missing?</label><textarea data-id="pulse_missing"></textarea></div>
-    <div class="field"><label>Your name and email <span class="hint">(optional, so Nijah can reply)</span></label><input type="text" data-id="pulse_contact"></div>
+    <div class="field"><label>Your name and email <span class="hint">(optional, so Nijah can reply)</span></label><input type="text" inputmode="email" autocomplete="email" data-id="pulse_contact"></div>
     <button class="done-btn" id="pulseSend" style="background:var(--amber);color:var(--teal)">Send my pulse check to Nijah</button>
     <div class="pulse-sent" id="pulseSent">Thank you for telling the truth. Your pulse check is on its way to Nijah. Remember, this was the first step. Keep going.</div>
   </section>
