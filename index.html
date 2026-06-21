@@ -336,6 +336,21 @@
     input[type=text],textarea{background:#fff;border-color:#999}
     .scale button.on{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   }
+  /* Your Identity Map — self-building profile */
+  .idmap{background:var(--teal);color:#fff;border-radius:16px;padding:42px 34px;margin:32px 0;position:relative;overflow:hidden}
+  .idmap::after{content:"";position:absolute;inset:auto 0 0 0;height:5px;background:linear-gradient(90deg,var(--amber),var(--terracotta))}
+  .idmap .eyebrow{font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--amber);margin-bottom:12px}
+  .idmap h2{font-family:var(--serif);font-weight:500;font-size:30px;line-height:1.14;margin-bottom:10px;color:#fff}
+  .idmap h2 em{font-style:italic;color:var(--blush)}
+  .idmap-sub{color:rgba(255,255,255,.8);max-width:54ch;font-size:15px;margin-bottom:6px}
+  .idmap-count{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:24px}
+  .idmap-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,.14);border-radius:12px;overflow:hidden}
+  .idmap-cell{background:var(--teal);padding:18px 20px}
+  .idmap-cell .lab{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);margin-bottom:7px}
+  .idmap-cell .val{font-size:15px;line-height:1.5;color:#fff}
+  .idmap-cell .val.empty{color:rgba(255,255,255,.42);font-style:italic}
+  .idmap-cell.full{grid-column:1 / -1}
+  @media(max-width:620px){.idmap-grid{grid-template-columns:1fr}.idmap-cell.full{grid-column:auto}}
 </style>
 </head>
 <body>
@@ -355,7 +370,7 @@
 </div>
 
 <header class="cover home-only">
-  <div class="eyebrow">A companion to The Identity Reset</div>
+  <div class="eyebrow">Your page-by-page companion to The Identity Reset</div>
   <h1>The Identity<br><em>Audit</em> Workbook</h1>
   <p class="sub">Nine tools to close the gap between the life you built and the woman you've become.</p>
   <div class="meta">Keep it. Fill it. Come back to it.</div>
@@ -394,6 +409,24 @@
     <div class="jtext"><h3 id="jHead">Begin where you are</h3><p id="jSub">Nine tools. One a day. Tap a card to open it, and each one you finish lights up.</p></div>
   </section>
   <div class="grid home-only" id="toolGrid"></div>
+
+  <!-- Your Identity Map: self-building profile -->
+  <section class="idmap home-only" id="idmap">
+    <div class="eyebrow">Your Identity Map</div>
+    <h2>This map writes <em>itself</em> as you tell the truth.</h2>
+    <p class="idmap-sub">Every tool you finish fills in one line below. Nothing to assemble. By the end, this is your gap in your own words, on one page.</p>
+    <div class="idmap-count" id="idmapCount">0 of 8 named</div>
+    <div class="idmap-grid">
+      <div class="idmap-cell"><div class="lab">Where you are</div><div class="val empty" id="map_stage">Not named yet</div></div>
+      <div class="idmap-cell"><div class="lab">What success hides</div><div class="val empty" id="map_hides">Not named yet</div></div>
+      <div class="idmap-cell"><div class="lab">Tired of being</div><div class="val empty" id="map_tired">Not named yet</div></div>
+      <div class="idmap-cell"><div class="lab">Where the gap is loudest</div><div class="val empty" id="map_loud">Not named yet</div></div>
+      <div class="idmap-cell full"><div class="lab">Your identity gap</div><div class="val empty" id="map_gap">Not named yet</div></div>
+      <div class="idmap-cell"><div class="lab">What you actually want</div><div class="val empty" id="map_want">Not named yet</div></div>
+      <div class="idmap-cell"><div class="lab">The decision you already know</div><div class="val empty" id="map_know">Not named yet</div></div>
+      <div class="idmap-cell full"><div class="lab">Your readiness</div><div class="val empty" id="map_ready">Not named yet</div></div>
+    </div>
+  </section>
 
   <!-- TOOL 1 -->
   <section class="tool" id="tool-1">
@@ -910,7 +943,24 @@
     var lb=document.getElementById('lkBtn');if(lb)lb.setAttribute('href','#'+firstIncomplete());}
   function renderGrid(){var g=document.getElementById('toolGrid');if(!g)return;var cd=coreDone();var h='';TOOLS.forEach(function(o){var isB=o.id==='tool-bonus',lock=isB&&!cd,d=!!store['done_'+o.id];
     h+='<a class="card'+(d?' done':'')+(lock?' locked':'')+'" href="#'+(lock?firstIncomplete():o.id)+'"><span class="badge">'+(lock?'&#128274;':'\u2713')+'</span><span class="cnum">'+o.n+'</span><h4>'+o.t+'</h4><p>'+(lock?'Locked until tool 9':o.d)+'</p></a>'});g.innerHTML=h}
-  function updateJourney(){renderGrid();updateBonusLock();var core=TOOLS.slice(0,9),done=0;core.forEach(function(o){if(store['done_'+o.id])done++});
+  /* ---- Your Identity Map (self-building profile) ---- */
+  function setCell(id,val){var el=document.getElementById(id);if(!el)return false;var has=!!(val&&(''+val).trim());
+    el.textContent=has?val:'Not named yet';el.classList.toggle('empty',!has);return has;}
+  function updateMap(){if(!document.getElementById('idmap'))return;var n=0;
+    var c=v('t1_choice');if(setCell('map_stage',c&&STAGE[c]?STAGE[c].s:''))n++;
+    var unseen=clip('t2_unseen',90);if(setCell('map_hides',unseen?'What no one sees: '+unseen:''))n++;
+    if(setCell('map_tired',clip('t3_being',90)))n++;
+    var lo=lowestArea();if(setCell('map_loud',lo?lo.area+' ('+lo.score+'/10)':''))n++;
+    var was=clip('t4_was',64),bec=clip('t4_becoming',64);if(setCell('map_gap',(was&&bec)?was+'  →  '+bec:''))n++;
+    if(setCell('map_want',clip('t6_scares',95)))n++;
+    if(setCell('map_know',clip('t8_know',110)))n++;
+    var rids=['t9_want','t9_trust','t9_change','t9_path','t9_confident'],sum=0,a=0;rids.forEach(function(i){if(v(i)){sum+=parseInt(v(i),10);a++}});
+    var rd='';if(a===5){var band=sum>=40?'Clear and ready':sum>=30?'Emerging clarity':sum>=20?'The gap is present':'A decision point';rd=sum+'/50 — '+band}
+    if(setCell('map_ready',rd))n++;
+    var cnt=document.getElementById('idmapCount');if(cnt)cnt.textContent=n+' of 8 named';
+  }
+
+  function updateJourney(){renderGrid();updateBonusLock();updateMap();var core=TOOLS.slice(0,9),done=0;core.forEach(function(o){if(store['done_'+o.id])done++});
     var rf=document.getElementById('ringFill'),rt=document.getElementById('ringText'),jh=document.getElementById('jHead'),js=document.getElementById('jSub');
     if(rt)rt.textContent=done+'/9';if(rf)rf.style.strokeDashoffset=(264*(1-done/9)).toFixed(1);
     var H,S;
