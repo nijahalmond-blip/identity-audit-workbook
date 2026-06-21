@@ -198,6 +198,30 @@
   .mascot-fig{background:none;border:none;cursor:pointer;width:62px;height:80px;padding:0;animation:bob 3.6s ease-in-out infinite;filter:drop-shadow(0 6px 14px rgba(7,59,69,.25))}
   @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
 
+  /* Mira chat panel (same logic as the about page) */
+  .mira-panel{position:fixed;right:20px;bottom:20px;z-index:71;width:360px;max-width:calc(100vw - 40px);height:520px;max-height:calc(100vh - 40px);background:var(--blush-light);border-radius:14px;box-shadow:0 18px 50px rgba(7,59,69,.4);display:none;flex-direction:column;overflow:hidden}
+  .mira-panel.open{display:flex}
+  .mira-head{background:var(--teal);color:var(--white);padding:18px 20px;display:flex;align-items:center;gap:12px}
+  .mira-head .mdot{width:40px;height:40px;border-radius:50%;background:var(--amber);color:var(--teal);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:23px;font-weight:600}
+  .mira-head .who{flex:1}
+  .mira-head .who b{font-family:var(--serif);font-size:19px;font-weight:600;display:block;line-height:1.1}
+  .mira-head .who span{font-size:12px;opacity:.75;letter-spacing:.03em}
+  .mira-x{background:transparent;border:0;color:var(--white);font-size:22px;cursor:pointer;opacity:.8;line-height:1}
+  .mira-x:hover{opacity:1}
+  .mira-log{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px}
+  .mmsg{max-width:84%;padding:11px 14px;border-radius:14px;font-size:14.5px;line-height:1.5}
+  .mmsg.bot{background:var(--white);color:var(--ink);border-bottom-left-radius:4px;align-self:flex-start;box-shadow:0 1px 4px rgba(42,31,26,.08)}
+  .mmsg.user{background:var(--teal-mid);color:var(--white);border-bottom-right-radius:4px;align-self:flex-end}
+  .mmsg a{color:var(--teal);font-weight:600}
+  .mmsg.user a{color:var(--amber)}
+  .mira-chips{display:flex;flex-wrap:wrap;gap:8px;padding:0 18px 12px}
+  .mira-chip{background:transparent;border:1px solid var(--teal-light);color:var(--teal);font-family:var(--sans);font-size:12.5px;font-weight:500;padding:8px 13px;border-radius:30px;cursor:pointer;transition:.15s}
+  .mira-chip:hover{background:var(--teal);color:var(--white)}
+  .mira-in{display:flex;gap:8px;padding:14px 16px;border-top:1px solid rgba(7,59,69,.12);background:var(--blush-light)}
+  .mira-in input{flex:1;border:1px solid rgba(7,59,69,.2);border-radius:24px;padding:11px 16px;font-family:var(--sans);font-size:14px;outline:none}
+  .mira-in input:focus{border-color:var(--amber)}
+  .mira-in button{background:var(--amber);color:var(--teal);border:0;border-radius:50%;width:42px;height:42px;cursor:pointer;font-size:18px;font-weight:700}
+
   /* pulse check */
   .pulse{background:#fff;border:1px solid rgba(7,59,69,.1);border-radius:14px;padding:42px 36px;margin:32px 0}
   .pulse .eyebrow{font-family:var(--sans);font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--amber);margin-bottom:12px}
@@ -272,7 +296,7 @@
   @media print{
     body{background:#fff}
     [id^="tool-"],.home-only{display:block !important}
-    .topbar,.step-header,.step-nav,.faq,.cta-card,.res-card,.mascot,.tool-actions,.pulse,.analyzing,.journey,.grid{display:none !important}
+    .topbar,.step-header,.step-nav,.faq,.cta-card,.res-card,.mascot,.mira-panel,.tool-actions,.pulse,.analyzing,.journey,.grid{display:none !important}
     .cover{padding:54px 24px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
     .cover,.readout,.close,.about{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     .tool{break-inside:avoid;box-shadow:none;border-color:rgba(7,59,69,.25)}
@@ -289,9 +313,10 @@
     <div class="progress-track"><div class="progress-fill" id="pfill"></div></div>
     <span class="progress-label" id="plabel">0% complete</span>
   </div>
-  <nav class="topnav"><a href="#">Tools</a><a href="#faq">FAQ</a><a href="#about">About</a></nav>
+  <nav class="topnav"><a href="#">Tools</a><a href="#faq">FAQ</a><a href="#about">About</a><a href="https://nijah-almond-about.vercel.app" target="_blank" rel="noopener">About Page &#8599;</a></nav>
   <div class="topbar-actions">
-    <button class="btn-amber" id="printBtn">Print / Save PDF</button>
+    <button class="reset-btn" id="printBtn">Print</button>
+    <button class="btn-amber" id="savePdfBtn">Save PDF</button>
     <button class="reset-btn" id="resetBtn">Reset</button>
   </div>
 </div>
@@ -467,7 +492,7 @@
   <section class="overall home-only" id="overall">
     <div class="eyebrow">Your reflection so far</div>
     <h2 id="ov_head">Your reflection will build here</h2>
-    <p id="ov_body">Open Tool 01 and tap Done. As you complete the tools, this becomes your own reflection, in Nijah's framing.</p>
+    <p id="ov_body">Open Tool 01 and tap Done. As you complete the tools, this becomes your own reflection, in your own words.</p>
     <div id="ov_cta"></div>
   </section>
 
@@ -550,6 +575,20 @@
   </button>
 </div>
 
+<div class="mira-panel" id="miraPanel" role="dialog" aria-label="Mira assistant">
+  <div class="mira-head">
+    <span class="mdot">M</span>
+    <div class="who"><b>Mira</b><span>Your assistant &middot; here to help</span></div>
+    <button class="mira-x" id="miraClose" aria-label="Close">&times;</button>
+  </div>
+  <div class="mira-log" id="miraLog"></div>
+  <div class="mira-chips" id="miraChips"></div>
+  <div class="mira-in">
+    <input type="text" id="miraInput" placeholder="Ask me anything..." autocomplete="off">
+    <button id="miraSend" aria-label="Send">&rarr;</button>
+  </div>
+</div>
+
 <footer>
   <div class="fbrand">Nijah Almond</div>
   <div>The Identity Reset &middot; The Identity Audit Workbook</div>
@@ -582,7 +621,7 @@
   var bubble=document.getElementById('mascotBubble'),bTimer;
   function say(html,ms){bubble.innerHTML=html;bubble.classList.add('show');clearTimeout(bTimer);if(ms)bTimer=setTimeout(function(){bubble.classList.remove('show')},ms)}
   document.getElementById('mascotFig').addEventListener('click',function(){
-    say("I'm Mira. Fill a page, then tap <b>Done</b> and I'll read it back to you in Nijah's framing.",7000)});
+    if(window.openMira){window.openMira();}else{say("I'm Mira. Fill a page, then tap <b>Done</b> and I'll read it back to you.",7000);}});
 
   /* ---- per-tool synthesis (uses their answers + Nijah's framework) ---- */
   var STAGE={
@@ -792,7 +831,7 @@
     var cal='https://calendly.com/nijah-almond/15min';
     function c(note){return '<div class="ov-cta"><a href="'+cal+'" target="_blank" rel="noopener">Book a Clarity Conversation</a><div class="ov-note">'+note+'</div></div>'}
     var area=lo?lo.area.toLowerCase():'';
-    if(key==='start'){head.textContent='Your reflection will build here';body.textContent="Open Tool 01 and tap Done. As you complete the tools, this becomes your own reflection, in Nijah's framing.";cta.innerHTML='';return}
+    if(key==='start'){head.textContent='Your reflection will build here';body.textContent="Open Tool 01 and tap Done. As you complete the tools, this becomes your own reflection, in your own words.";cta.innerHTML='';return}
     if(key==='decision'){head.innerHTML='You are at a <em>decision point.</em>';body.textContent='You already know something needs to change'+(area?', and it is loudest in '+area:'')+'. This is the moment company helps most. A short Clarity Conversation is the next honest step.';cta.innerHTML=c('Thirty minutes. No pitch. Just truth.');return}
     if(key==='clear'){head.innerHTML='You are clear, and <em>close.</em>';body.textContent='You know what you want and you trust yourself to move'+(area?'. Keep an eye on '+area:'')+'. Your next step is action, not more thinking. If you want to sharpen the plan, a Clarity Conversation will do it.';cta.innerHTML=c('Bring your Next Chapter Snapshot to the call.');return}
     head.innerHTML='You are in the <em>gap,</em> and the work has started.';body.textContent='Something has stopped fitting'+(area?', and it is loudest in '+area:'')+'. That is not a problem to fix today. It is the truth to keep telling. When you want to go deeper than these pages, a Clarity Conversation is there.';cta.innerHTML=c('No rush. The door stays open.');
@@ -847,10 +886,41 @@
   window.addEventListener('hashchange',route);
 
   document.getElementById('printBtn').addEventListener('click',function(){window.print()});
+  document.getElementById('savePdfBtn').addEventListener('click',function(){window.print()});
   document.getElementById('resetBtn').addEventListener('click',function(){if(confirm('Clear everything in this workbook? This cannot be undone.')){store={};save();location.hash='';location.reload()}});
 
   updateScore();updateProgress();route();
-  setTimeout(function(){if(location.hash)return;var seen=false;for(var k in store){if(k.indexOf('done_')===0||(store[k]&&(''+store[k]).trim())){seen=true;break}}say(seen?"Welcome back. Your work is right where you left it.":"Hi, I'm <b>Mira</b>. One page a day. Tap <b>Done</b> and I'll read it back to you in Nijah's framing.",8000)},1200);
+  setTimeout(function(){if(location.hash)return;var seen=false;for(var k in store){if(k.indexOf('done_')===0||(store[k]&&(''+store[k]).trim())){seen=true;break}}say(seen?"Welcome back. Your work is right where you left it.":"Hi, I'm <b>Mira</b>. One page a day. Tap <b>Done</b> and I'll read it back to you.",8000)},1200);
+})();
+</script>
+
+<script>
+(function(){
+  var KB=[
+    {k:['grit','program','12 week','12-week','cohort','transformation system'],a:"GRIT is the 12-week Identity Transformation System: Gap, Reality, Identity, Truth. Small group plus three 1:1 touchpoints, identity-first. Investment $2,500 to $4,500."},
+    {k:['workshop','identity gap workshop','97'],a:"The Identity Gap Workshop is a 90-minute live session ($97) where you name your identity gap and what it is costing you. It leads into GRIT."},
+    {k:['vip','1:1','one on one','reconstruction','private'],a:"Identity Reconstruction VIP is the private path: weekly 1:1, priority Voxer, custom strategy, 90-day plan. Ask about a Clarity Conversation to see if it fits."},
+    {k:['legacy lounge','community','free','skool'],a:"The Legacy Lounge is the free community where this work starts. <a href='https://www.skool.com/the-legacy-lounge-free-7046/about?ref=4aecf50ea0e64eb0924b177d6890a1fb' target='_blank'>Join here</a>."},
+    {k:['identity gap score','score','assessment','quiz'],a:"The free Identity Gap Score shows you where your gap is. <a href='https://identitygapscore.com' target='_blank'>Take it here</a>."},
+    {k:['workbook','how do i use','use this','tool','tools','save','autosave'],a:"This workbook holds nine tools, one per page, following the email course. Your answers autosave on this device. Fill a tool, tap Done, and I read it back to you. See the <a href='#faq'>FAQ</a> for more."},
+    {k:['clarity','call','book','conversation','coaching'],a:"A Next Chapter Clarity Conversation is 30 minutes to say the true thing out loud and decide what to do with it. <a href='https://calendly.com/nijah-almond/15min' target='_blank'>Book one here</a>."},
+    {k:['about','who','story','bio'],a:"Read the full story on the <a href='https://nijah-almond-about.vercel.app' target='_blank'>About page</a>, or the <a href='#about'>About section</a> in this workbook."},
+    {k:['contact','email','reach','phone'],a:"Reach out at info@nijahalmond.com. The best first step is usually a Clarity Conversation or joining the Legacy Lounge."},
+    {k:['print','pdf','download'],a:"Use the Print / Save PDF button at the top right. It prints the full workbook with your answers, and you can choose Save as PDF to keep a copy."},
+    {k:['navigate','where','find','help','menu','lost'],a:"I can guide you. This workbook has the nine <a href='#'>Tools</a>, the <a href='#faq'>FAQ</a>, and an <a href='#about'>About</a> section. The <a href='https://nijah-almond-about.vercel.app' target='_blank'>About page</a> has the full story. What are you looking for?"}
+  ];
+  var FALLBACK="I keep it simple: the workbook tools, GRIT, the Identity Gap Workshop, the Legacy Lounge, the free assessment, and booking a Clarity Conversation. Try a button below or ask about any of those.";
+  var CHIPS=[{t:"How do I use this?",q:"how do i use this workbook"},{t:"Read the story",q:"about story"},{t:"What is GRIT?",q:"tell me about grit"},{t:"Book a Clarity Conversation",q:"book a clarity conversation"},{t:"Join the Legacy Lounge",q:"legacy lounge"}];
+  var panel=document.getElementById('miraPanel'),log=document.getElementById('miraLog'),input=document.getElementById('miraInput'),chips=document.getElementById('miraChips');
+  if(!panel)return;
+  function add(t,who){var d=document.createElement('div');d.className='mmsg '+(who||'bot');d.innerHTML=t;log.appendChild(d);log.scrollTop=log.scrollHeight;}
+  function answer(q){var s=q.toLowerCase();for(var i=0;i<KB.length;i++){for(var j=0;j<KB[i].k.length;j++){if(s.indexOf(KB[i].k[j])>-1)return KB[i].a;}}return FALLBACK;}
+  function ask(q){add(q,'user');setTimeout(function(){add(answer(q),'bot');},350);}
+  function renderChips(){chips.innerHTML='';CHIPS.forEach(function(c){var b=document.createElement('button');b.className='mira-chip';b.textContent=c.t;b.onclick=function(){ask(c.q);};chips.appendChild(b);});}
+  window.openMira=function(){panel.classList.add('open');if(!log.childNodes.length){add("Hi, I'm Mira. I can help you use this workbook, answer questions about the work, or point you to the full story. What brings you here?");renderChips();}input.focus();};
+  document.getElementById('miraClose').onclick=function(){panel.classList.remove('open');};
+  document.getElementById('miraSend').onclick=function(){var v=input.value.trim();if(!v)return;ask(v);input.value='';};
+  input.addEventListener('keydown',function(e){if(e.key==='Enter'){var v=input.value.trim();if(!v)return;ask(v);input.value='';}});
 })();
 </script>
 </body>
