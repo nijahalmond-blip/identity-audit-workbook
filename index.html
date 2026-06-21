@@ -222,6 +222,37 @@
   .mira-in input:focus{border-color:var(--amber)}
   .mira-in button{background:var(--amber);color:var(--teal);border:0;border-radius:50%;width:42px;height:42px;cursor:pointer;font-size:18px;font-weight:700}
 
+  /* Next Chapter grand finale (unlocked) */
+  #tool-bonus.finale{background:linear-gradient(160deg,var(--teal),var(--teal-mid));border:none;color:#fff;box-shadow:0 20px 54px rgba(7,59,69,.3);position:relative;overflow:hidden}
+  #tool-bonus.finale::after{content:"";position:absolute;inset:auto 0 0 0;height:5px;background:linear-gradient(90deg,var(--amber),var(--terracotta))}
+  #tool-bonus.finale .tool-num{color:var(--amber)}
+  #tool-bonus.finale h2{color:#fff}
+  #tool-bonus.finale .frame{color:rgba(255,255,255,.82)}
+  #tool-bonus.finale .frame em{color:var(--blush)}
+  #tool-bonus.finale .field label{color:var(--amber)}
+  #tool-bonus.finale .field .hint{color:rgba(255,255,255,.55)}
+  #tool-bonus.finale input[type=text],#tool-bonus.finale textarea{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.25);color:#fff}
+  #tool-bonus.finale input::placeholder,#tool-bonus.finale textarea::placeholder{color:rgba(255,255,255,.4)}
+  #tool-bonus.finale input[type=text]:focus,#tool-bonus.finale textarea:focus{background:rgba(255,255,255,.14);border-color:var(--amber);box-shadow:0 0 0 3px rgba(242,180,26,.22)}
+  .finale-banner{margin-bottom:4px}
+  .finale-banner .fb-eyebrow{font-family:var(--sans);font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--amber)}
+  .finale-reveal{font-family:var(--serif);font-style:italic;font-size:clamp(22px,3.4vw,31px);line-height:1.22;color:#fff;margin:10px 0 22px}
+  .finale-reveal span{color:var(--blush)}
+  /* locked state (overrides finale; placed after so it wins) */
+  .finale-lock{display:none;text-align:center;padding:26px 6px}
+  .finale-lock .lock-ic{font-size:38px;line-height:1}
+  .finale-lock .lk-eyebrow{font-family:var(--sans);font-size:12px;letter-spacing:.26em;text-transform:uppercase;color:var(--terracotta);margin:14px 0 8px}
+  .finale-lock h2{font-family:var(--serif);font-weight:600;font-size:28px;color:var(--teal);margin-bottom:12px}
+  .finale-lock p{font-size:15px;color:rgba(42,31,26,.78);max-width:46ch;margin:0 auto 16px;line-height:1.6}
+  .finale-lock .lk-count{font-family:var(--serif);font-style:italic;color:var(--terracotta);font-size:19px;margin-bottom:20px}
+  .finale-lock a.lk-btn{display:inline-block;background:var(--amber);color:var(--teal);font-family:var(--sans);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:13px;padding:14px 28px;border-radius:6px;text-decoration:none;transition:.2s}
+  .finale-lock a.lk-btn:hover{filter:brightness(1.06)}
+  #tool-bonus.locked{background:#fff;border:1px dashed rgba(7,59,69,.28)}
+  #tool-bonus.locked .finale-body,#tool-bonus.locked .tool-actions,#tool-bonus.locked .explain-panel,#tool-bonus.locked .analyzing{display:none !important}
+  #tool-bonus.locked .finale-lock{display:block}
+  .card.locked{opacity:.55}
+  .card.locked h4{color:var(--teal-mid)}
+
   /* pulse check */
   .pulse{background:#fff;border:1px solid rgba(7,59,69,.1);border-radius:14px;padding:42px 36px;margin:32px 0}
   .pulse .eyebrow{font-family:var(--sans);font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--amber);margin-bottom:12px}
@@ -466,13 +497,25 @@
 
   <!-- BONUS -->
   <section class="tool" id="tool-bonus">
-    <div class="tool-head"><span class="tool-num">Bonus</span><h2>Next Chapter Snapshot</h2></div>
-    <p class="frame">Not a plan. A direction. One honest sentence each.</p>
-    <div class="field"><label>In my next chapter, I want my career to feel</label><input type="text" data-id="ncs_career"></div>
-    <div class="field"><label>I want my relationships to feel</label><input type="text" data-id="ncs_relationships"></div>
-    <div class="field"><label>I want my purpose to feel</label><input type="text" data-id="ncs_purpose"></div>
-    <div class="field"><label>I want my legacy to be</label><input type="text" data-id="ncs_legacy"></div>
-    <div class="field"><label>My next chapter is calling me toward</label><textarea data-id="ncs_toward"></textarea></div>
+    <div class="finale-lock">
+      <div class="lock-ic">&#128274;</div>
+      <div class="lk-eyebrow">The grand finale, sealed</div>
+      <h2>Your Next Chapter reveal is locked</h2>
+      <p>This last page is the payoff, and it lands hardest with everything you uncovered behind it. Finish the nine tools and it opens.</p>
+      <div class="lk-count" id="lkCount">0 of 9 tools complete</div>
+      <a class="lk-btn" id="lkBtn" href="#tool-1">Continue the tools</a>
+    </div>
+    <div class="finale-body">
+      <div class="finale-banner"><span class="fb-eyebrow">The grand finale</span></div>
+      <p class="finale-reveal">You have met her on every page. <span>Now name where she is going.</span></p>
+      <div class="tool-head"><span class="tool-num">The reveal</span><h2>Next Chapter Snapshot</h2></div>
+      <p class="frame">Not a plan. A direction. One honest sentence each.</p>
+      <div class="field"><label>In my next chapter, I want my career to feel</label><input type="text" data-id="ncs_career"></div>
+      <div class="field"><label>I want my relationships to feel</label><input type="text" data-id="ncs_relationships"></div>
+      <div class="field"><label>I want my purpose to feel</label><input type="text" data-id="ncs_purpose"></div>
+      <div class="field"><label>I want my legacy to be</label><input type="text" data-id="ncs_legacy"></div>
+      <div class="field"><label>My next chapter is calling me toward</label><textarea data-id="ncs_toward"></textarea></div>
+    </div>
   </section>
 
   <nav class="step-nav" id="stepNav">
@@ -489,12 +532,6 @@
     <p>The next chapter is not built by the woman who got you here. It is built by the one you just spent these pages meeting.</p>
   </section>
 
-  <section class="overall home-only" id="overall">
-    <div class="eyebrow">Your reflection so far</div>
-    <h2 id="ov_head">Your reflection will build here</h2>
-    <p id="ov_body">Open Tool 01 and tap Done. As you complete the tools, this becomes your own reflection, in your own words.</p>
-    <div id="ov_cta"></div>
-  </section>
 
   <section class="pulse" id="pulse" style="display:none">
     <div class="eyebrow">Optional</div>
@@ -850,8 +887,16 @@
     {id:'tool-9',n:'09',t:'Next Chapter Readiness',d:'Where you stand'},
     {id:'tool-bonus',n:'\u2605',t:'Next Chapter Snapshot',d:'Your compass'}
   ];
-  function renderGrid(){var g=document.getElementById('toolGrid');if(!g)return;var h='';TOOLS.forEach(function(o){var d=!!store['done_'+o.id];h+='<a class="card'+(d?' done':'')+'" href="#'+o.id+'"><span class="badge">\u2713</span><span class="cnum">'+o.n+'</span><h4>'+o.t+'</h4><p>'+o.d+'</p></a>'});g.innerHTML=h}
-  function updateJourney(){renderGrid();var core=TOOLS.slice(0,9),done=0;core.forEach(function(o){if(store['done_'+o.id])done++});
+  function coreDone(){for(var i=1;i<=9;i++){if(!store['done_tool-'+i])return false}return true}
+  function coreCount(){var n=0;for(var i=1;i<=9;i++){if(store['done_tool-'+i])n++}return n}
+  function firstIncomplete(){for(var i=1;i<=9;i++){if(!store['done_tool-'+i])return 'tool-'+i}return 'tool-1'}
+  function updateBonusLock(){var sec=document.getElementById('tool-bonus');if(!sec)return;var cd=coreDone();
+    sec.classList.toggle('finale',cd);sec.classList.toggle('locked',!cd);
+    var lc=document.getElementById('lkCount');if(lc)lc.textContent=coreCount()+' of 9 tools complete';
+    var lb=document.getElementById('lkBtn');if(lb)lb.setAttribute('href','#'+firstIncomplete());}
+  function renderGrid(){var g=document.getElementById('toolGrid');if(!g)return;var cd=coreDone();var h='';TOOLS.forEach(function(o){var isB=o.id==='tool-bonus',lock=isB&&!cd,d=!!store['done_'+o.id];
+    h+='<a class="card'+(d?' done':'')+(lock?' locked':'')+'" href="#'+(lock?firstIncomplete():o.id)+'"><span class="badge">'+(lock?'&#128274;':'\u2713')+'</span><span class="cnum">'+o.n+'</span><h4>'+o.t+'</h4><p>'+(lock?'Locked until tool 9':o.d)+'</p></a>'});g.innerHTML=h}
+  function updateJourney(){renderGrid();updateBonusLock();var core=TOOLS.slice(0,9),done=0;core.forEach(function(o){if(store['done_'+o.id])done++});
     var rf=document.getElementById('ringFill'),rt=document.getElementById('ringText'),jh=document.getElementById('jHead'),js=document.getElementById('jSub');
     if(rt)rt.textContent=done+'/9';if(rf)rf.style.strokeDashoffset=(264*(1-done/9)).toFixed(1);
     var H,S;
