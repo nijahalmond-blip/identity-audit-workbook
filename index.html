@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Identity Audit Workbook | Nijah Almond</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --teal:#073B45; --teal-mid:#085866; --teal-light:#0C6373;
+    --amber:#F2B41A; --ink:#2A1F1A; --terracotta:#E37A7A;
+    --blush:#E8B7C5; --blush-light:#F6E4DA; --white:#FFFFFF;
+    --serif:'Cormorant Garamond',Georgia,serif;
+    --sans:'DM Sans',-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);color:var(--ink);background:var(--blush-light);line-height:1.6;-webkit-font-smoothing:antialiased}
+
+  .topnav{display:flex;gap:16px;align-items:center}
+  .topnav a{color:rgba(255,255,255,.82);font-size:11px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;font-weight:600;transition:.2s}
+  .topnav a:hover{color:var(--amber)}
+  .page{display:none}
+  .page-back{display:inline-block;font-family:var(--sans);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-mid);text-decoration:none;font-weight:600;margin-bottom:18px}
+  .page-back:hover{color:var(--amber)}
+  @media(max-width:600px){.topnav{gap:10px}.topnav a{font-size:10px;letter-spacing:.06em}}
+
+  .topbar{position:sticky;top:0;z-index:50;background:var(--teal);color:var(--white);
+    display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 24px;border-bottom:1px solid rgba(255,255,255,.08)}
+  .topbar .brand{font-family:var(--sans);font-weight:700;letter-spacing:.18em;text-transform:uppercase;font-size:12px;white-space:nowrap}
+  .progress-wrap{flex:1;display:flex;align-items:center;gap:12px;max-width:460px}
+  .progress-track{flex:1;height:6px;border-radius:6px;background:rgba(255,255,255,.16);overflow:hidden}
+  .progress-fill{height:100%;width:0;background:var(--amber);transition:width .4s ease}
+  .progress-label{font-size:12px;font-variant-numeric:tabular-nums;min-width:74px;text-align:right;color:var(--amber);font-weight:500}
+  .topbar-actions{display:flex;gap:8px;align-items:center}
+  .btn-amber{background:var(--amber);color:var(--teal);border:none;font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:7px 13px;border-radius:4px;cursor:pointer;transition:.2s}
+  .btn-amber:hover{filter:brightness(1.06)}
+  .reset-btn{background:none;border:1px solid rgba(255,255,255,.25);color:var(--white);font-family:var(--sans);font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;border-radius:4px;cursor:pointer;transition:.2s}
+  .reset-btn:hover{background:rgba(255,255,255,.1)}
+
+  .wrap{max-width:760px;margin:0 auto;padding:0 24px}
+
+  .cover{background:var(--teal);color:var(--white);padding:88px 24px 84px;text-align:center;position:relative;overflow:hidden}
+  .cover::after{content:"";position:absolute;inset:auto 0 0 0;height:6px;background:linear-gradient(90deg,var(--amber),var(--terracotta))}
+  .cover .eyebrow{font-family:var(--sans);font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--amber);margin-bottom:24px}
+  .cover h1{font-family:var(--serif);font-weight:500;font-size:clamp(40px,8vw,72px);line-height:1.02;letter-spacing:-.01em}
+  .cover h1 em{font-style:italic;color:var(--blush)}
+  .cover .sub{font-family:var(--serif);font-style:italic;font-size:clamp(18px,3vw,24px);color:rgba(255,255,255,.82);margin-top:20px;max-width:30ch;margin-left:auto;margin-right:auto}
+  .cover .meta{font-family:var(--sans);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-top:36px}
+
+  /* step header + nav (single-tool view) */
+  .step-header{display:none;align-items:center;justify-content:space-between;padding:26px 0 2px;gap:14px}
+  .link-all,.nav-all{font-family:var(--sans);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal-mid);text-decoration:none;font-weight:600}
+  .link-all:hover,.nav-all:hover{color:var(--amber)}
+  .step-count{font-family:var(--serif);font-style:italic;font-size:17px;color:var(--terracotta)}
+  .step-nav{display:none;align-items:center;justify-content:space-between;gap:10px;margin:8px 0 40px}
+  .nav-btn{font-family:var(--sans);font-size:13px;font-weight:600;letter-spacing:.04em;color:var(--white);background:var(--teal);text-decoration:none;padding:13px 20px;border-radius:6px;transition:.2s}
+  .nav-btn:hover{background:var(--teal-mid)}
+
+  .intro{padding:56px 0 8px}
+  .intro p{font-family:var(--serif);font-size:21px;line-height:1.5;color:var(--ink);margin-bottom:18px}
+  .intro .lead{font-size:24px}
+  .intro strong{color:var(--teal);font-weight:600}
+
+  .tool{background:var(--white);border:1px solid rgba(7,59,69,.1);border-radius:14px;padding:40px 36px;margin:28px 0;box-shadow:0 1px 0 rgba(7,59,69,.04)}
+  .tool-head{display:flex;align-items:baseline;gap:16px;margin-bottom:6px}
+  .tool-num{font-family:var(--serif);font-style:italic;font-size:15px;letter-spacing:.05em;color:var(--amber);font-weight:600;white-space:nowrap}
+  .tool h2{font-family:var(--serif);font-weight:600;font-size:30px;line-height:1.1;color:var(--teal)}
+  .tool .frame{font-size:15px;color:rgba(42,31,26,.78);margin:14px 0 26px;max-width:58ch}
+  .tool .frame em{color:var(--terracotta);font-style:italic}
+
+  .field{margin:18px 0}
+  .field label{display:block;font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-mid);margin-bottom:8px}
+  .field .hint{font-weight:400;text-transform:none;letter-spacing:0;color:rgba(42,31,26,.5);font-size:12px;margin-left:6px}
+  input[type=text],textarea{width:100%;font-family:var(--sans);font-size:16px;color:var(--ink);background:var(--blush-light);border:1px solid rgba(7,59,69,.14);border-radius:8px;padding:12px 14px;resize:vertical}
+  textarea{min-height:72px;line-height:1.55}
+  input[type=text]:focus,textarea:focus{outline:none;border-color:var(--amber);background:#fffdf6;box-shadow:0 0 0 3px rgba(242,180,26,.16)}
+
+  .choices{display:grid;gap:10px;margin-top:6px}
+  .choice{display:flex;align-items:flex-start;gap:12px;border:1px solid rgba(7,59,69,.14);border-radius:8px;padding:13px 15px;cursor:pointer;background:var(--blush-light);transition:.18s}
+  .choice:hover{border-color:var(--teal-light)}
+  .choice input{margin-top:3px;accent-color:var(--amber);width:16px;height:16px}
+  .choice span{font-size:15px}
+  .choice.sel{border-color:var(--amber);background:#fffdf6}
+
+  .result-panel{margin-top:18px;background:var(--teal);color:#fff;border-radius:10px;padding:22px 24px;border-left:4px solid var(--amber);animation:fade .35s ease}
+  .result-panel .rp-stage{font-family:var(--serif);font-style:italic;font-size:23px;color:var(--amber);margin-bottom:6px}
+  .result-panel .rp-text{font-size:15px;color:rgba(255,255,255,.92);line-height:1.58}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .rating{display:flex;align-items:center;justify-content:space-between;gap:14px;border-bottom:1px solid rgba(7,59,69,.08);padding:13px 0}
+  .rating:last-of-type{border-bottom:none}
+  .rating .rlabel{font-family:var(--sans);font-weight:500;font-size:16px;color:var(--ink)}
+  .scale{display:flex;gap:5px;flex-wrap:wrap}
+  .scale button{width:30px;height:30px;border-radius:50%;border:1px solid rgba(7,59,69,.18);background:var(--white);font-family:var(--sans);font-size:13px;color:var(--teal-mid);cursor:pointer;transition:.15s;font-variant-numeric:tabular-nums}
+  .scale button:hover{border-color:var(--amber)}
+  .scale button.on{background:var(--teal);color:var(--white);border-color:var(--teal)}
+
+  .matrix{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:8px}
+  .matrix .col{background:var(--blush-light);border:1px solid rgba(7,59,69,.12);border-radius:10px;padding:20px 18px}
+  .matrix .col h3{font-family:var(--serif);font-style:italic;font-size:22px;color:var(--teal);margin-bottom:14px}
+  .matrix textarea{background:var(--white);min-height:56px}
+  @media(max-width:620px){.matrix{grid-template-columns:1fr}}
+
+  .readout{margin-top:22px;background:var(--teal);color:var(--white);border-radius:10px;padding:20px 22px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+  .readout .num{font-family:var(--serif);font-size:46px;font-weight:500;line-height:1;color:var(--amber)}
+  .readout .band{font-family:var(--sans);font-size:14px;color:rgba(255,255,255,.85)}
+  .readout .band b{color:var(--white);display:block;font-size:16px;margin-bottom:2px;font-weight:700}
+
+  .pull{font-family:var(--serif);font-style:italic;font-size:24px;line-height:1.4;color:var(--teal);text-align:center;padding:40px 8px;max-width:34ch;margin:0 auto}
+  .pull span{color:var(--terracotta)}
+
+  .close{background:var(--teal);color:var(--white);border-radius:14px;padding:48px 36px;margin:36px 0;text-align:center}
+  .close .eyebrow{font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--amber);margin-bottom:16px}
+  .close h2{font-family:var(--serif);font-weight:500;font-size:34px;line-height:1.1;margin-bottom:14px}
+  .close h2 em{font-style:italic;color:var(--blush)}
+  .close p{color:rgba(255,255,255,.82);max-width:46ch;margin:0 auto 8px}
+
+  /* resources index */
+  .res-card{background:var(--teal);color:#fff;border-radius:14px;padding:38px 36px;margin:28px 0}
+  .res-card h2{font-family:var(--serif);font-weight:500;font-size:27px;margin-bottom:6px;color:#fff}
+  .res-card .res-sub{color:rgba(255,255,255,.7);font-size:14px;margin-bottom:18px}
+  .res-list{list-style:none;display:grid;gap:0}
+  .res-list a{display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none;padding:15px 0;border-bottom:1px solid rgba(255,255,255,.12);font-size:16px;transition:.15s}
+  .res-list li:last-child a{border-bottom:none}
+  .res-list a:hover{color:var(--amber)}
+  .res-list .dia{color:var(--amber);font-size:11px}
+  .res-list .arrow{margin-left:auto;color:var(--amber);font-size:18px}
+
+  /* faq */
+  .faq{margin:48px 0 8px}
+  .faq h2{font-family:var(--serif);font-weight:600;font-size:32px;color:var(--teal);text-align:center;margin-bottom:6px}
+  .faq .faq-sub{text-align:center;color:rgba(42,31,26,.6);font-size:14px;margin-bottom:26px}
+  .faq-item{background:var(--white);border:1px solid rgba(7,59,69,.1);border-radius:12px;padding:22px 26px;margin:12px 0}
+  .faq-item h3{font-family:var(--sans);font-size:16px;font-weight:700;color:var(--teal-mid);margin-bottom:8px}
+  .faq-item p{font-size:15px;color:rgba(42,31,26,.82)}
+
+  /* about */
+  .about{background:var(--white);border:1px solid rgba(7,59,69,.1);border-radius:14px;padding:42px 36px;margin:32px 0}
+  .about .eyebrow{font-family:var(--sans);font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--terracotta);margin-bottom:12px}
+  .about h2{font-family:var(--serif);font-weight:600;font-size:30px;color:var(--teal);margin-bottom:16px}
+  .about p{font-size:16px;color:rgba(42,31,26,.85);margin-bottom:14px;line-height:1.62}
+  .about .contact{font-size:14px;color:var(--teal-mid);margin-top:18px;padding-top:16px;border-top:1px solid rgba(7,59,69,.1)}
+  .about .contact a{color:var(--teal-mid);text-decoration:none;font-weight:500}
+  .about .contact a:hover{color:var(--amber)}
+
+  /* cta */
+  .cta-card{background:var(--teal);color:#fff;border-radius:14px;padding:48px 36px;margin:32px 0;text-align:center;position:relative;overflow:hidden}
+  .cta-card::after{content:"";position:absolute;inset:auto 0 0 0;height:5px;background:linear-gradient(90deg,var(--amber),var(--terracotta))}
+  .cta-card .eyebrow{font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--amber);margin-bottom:14px}
+  .cta-card h2{font-family:var(--serif);font-weight:500;font-size:32px;line-height:1.12;margin-bottom:12px}
+  .cta-card h2 em{font-style:italic;color:var(--blush)}
+  .cta-card p{color:rgba(255,255,255,.82);max-width:44ch;margin:0 auto 24px}
+  .cta-buttons{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+  .btn-cta{display:inline-block;background:var(--amber);color:var(--teal);font-family:var(--sans);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:13px;padding:15px 28px;border-radius:6px;text-decoration:none;transition:.2s}
+  .btn-cta:hover{filter:brightness(1.06)}
+  .btn-ghost{display:inline-block;border:1px solid rgba(255,255,255,.4);color:#fff;font-family:var(--sans);font-weight:500;text-transform:uppercase;letter-spacing:.08em;font-size:13px;padding:15px 28px;border-radius:6px;text-decoration:none;transition:.2s}
+  .btn-ghost:hover{background:rgba(255,255,255,.1)}
+
+  footer{text-align:center;padding:48px 24px 64px;color:rgba(42,31,26,.55);font-size:12px;letter-spacing:.04em}
+  footer .fbrand{font-family:var(--serif);font-style:italic;font-size:20px;color:var(--teal);margin-bottom:8px}
+  footer a{color:var(--teal-mid);text-decoration:none}
+  footer a:hover{color:var(--amber)}
+  footer .frow{margin-top:6px}
+  .social-row{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:22px}
+  .social-row a{width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;border:1px solid rgba(7,59,69,.18);border-radius:50%;color:var(--teal-mid);transition:.2s}
+  .social-row a:hover{background:var(--teal);color:#fff;border-color:var(--teal)}
+  .social-row svg{width:19px;height:19px;fill:currentColor}
+  .faddress{margin-top:20px;font-size:11.5px;color:rgba(42,31,26,.5);line-height:1.55}
+  .flegal{margin-top:12px;font-size:11.5px}
+  .flegal a{color:var(--teal-mid);text-decoration:none}
+  .flegal a:hover{color:var(--amber)}
+  .fcopy{margin-top:8px;font-size:11.5px;color:rgba(42,31,26,.5)}
+
+  /* tool done + explanation */
+  .tool-actions{margin-top:26px}
+  .done-btn{font-family:var(--sans);font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:#fff;background:var(--terracotta);border:none;border-radius:8px;padding:15px 22px;cursor:pointer;transition:.2s;width:100%}
+  .done-btn:hover{filter:brightness(1.05)}
+  .done-btn:active{transform:translateY(1px)}
+  .explain-panel{margin-top:18px;background:var(--teal);color:#fff;border-radius:10px;padding:24px 26px;border-left:4px solid var(--amber);animation:fade .4s ease}
+  .explain-panel .ex-stage{font-family:var(--serif);font-style:italic;font-size:23px;color:var(--amber);margin-bottom:8px}
+  .explain-panel .ex-text{font-size:15px;color:rgba(255,255,255,.92);line-height:1.6}
+  .explain-panel .ex-note{font-size:13px;color:rgba(255,255,255,.6);margin-top:12px;font-style:italic}
+  .analyzing{display:flex;align-items:center;gap:12px;margin-top:18px;color:var(--teal-mid);font-size:15px;font-style:italic;font-family:var(--serif)}
+  .dots{display:inline-flex;gap:5px}
+  .dots i{width:7px;height:7px;border-radius:50%;background:var(--amber);animation:bounce 1s infinite}
+  .dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
+  @keyframes bounce{0%,80%,100%{transform:scale(.6);opacity:.5}40%{transform:scale(1);opacity:1}}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  /* mascot (Mira) */
+  .mascot{position:fixed;right:20px;bottom:20px;z-index:60;display:flex;flex-direction:column;align-items:flex-end;gap:10px;max-width:286px}
+  .mascot-bubble{background:#fff;color:var(--ink);border:1px solid rgba(7,59,69,.14);border-radius:14px 14px 4px 14px;padding:13px 16px;font-size:14px;line-height:1.45;box-shadow:0 8px 26px rgba(7,59,69,.18);opacity:0;transform:translateY(8px) scale(.96);transition:.3s;pointer-events:none}
+  .mascot-bubble.show{opacity:1;transform:none}
+  .mascot-bubble b{color:var(--teal);font-weight:700}
+  .mascot-fig{background:none;border:none;cursor:pointer;width:62px;height:80px;padding:0;animation:bob 3.6s ease-in-out infinite;filter:drop-shadow(0 6px 14px rgba(7,59,69,.25))}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+
+  /* pulse check */
+  .pulse{background:#fff;border:1px solid rgba(7,59,69,.1);border-radius:14px;padding:42px 36px;margin:32px 0}
+  .pulse .eyebrow{font-family:var(--sans);font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--amber);margin-bottom:12px}
+  .pulse h2{font-family:var(--serif);font-weight:600;font-size:30px;color:var(--teal);margin-bottom:4px}
+  .pulse .optional{font-size:14px;color:var(--terracotta);font-style:italic;font-family:var(--serif);margin-bottom:16px}
+  .pulse .preface{font-size:15px;color:rgba(42,31,26,.82);line-height:1.62;background:var(--blush-light);border-left:3px solid var(--amber);border-radius:8px;padding:18px 20px;margin-bottom:24px}
+  .pulse-sent{display:none;background:var(--teal);color:#fff;border-radius:10px;padding:20px 22px;margin-top:14px;font-size:15px;line-height:1.55;animation:fade .4s ease}
+
+  /* tool view fade */
+  .tool-anim{animation:fade .45s ease}
+
+  /* gamified home: journey + grid */
+  .journey{background:linear-gradient(135deg,var(--teal),var(--teal-mid));color:#fff;border-radius:16px;padding:32px 34px;margin:28px 0;display:flex;align-items:center;gap:26px;flex-wrap:wrap}
+  .ring{position:relative;width:96px;height:96px;flex:0 0 auto}
+  .ring #ringFill{transition:stroke-dashoffset .6s ease}
+  .ring .rtext{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-style:italic;font-size:25px;color:var(--amber)}
+  .jtext{flex:1;min-width:200px}
+  .jtext h3{font-family:var(--serif);font-weight:500;font-size:27px;margin-bottom:5px}
+  .jtext p{color:rgba(255,255,255,.8);font-size:14px;line-height:1.5}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:22px 0 8px}
+  .card{background:#fff;border:1px solid rgba(7,59,69,.1);border-radius:14px;padding:22px 20px;text-decoration:none;color:var(--ink);display:flex;flex-direction:column;gap:7px;transition:.2s;position:relative;min-height:128px;overflow:hidden}
+  .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:transparent;transition:.2s}
+  .card:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(7,59,69,.13);border-color:var(--teal-light)}
+  .card .cnum{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--amber);font-weight:600}
+  .card h4{font-family:var(--serif);font-weight:600;font-size:19px;color:var(--teal);line-height:1.12}
+  .card p{font-size:12.5px;color:rgba(42,31,26,.58);margin-top:auto}
+  .card .badge{position:absolute;top:15px;right:15px;width:23px;height:23px;border-radius:50%;border:1.5px solid rgba(7,59,69,.18);display:flex;align-items:center;justify-content:center;font-size:12px;color:transparent;transition:.2s}
+  .card.done{border-color:rgba(242,180,26,.6)}
+  .card.done::before{background:var(--amber)}
+  .card.done .badge{background:var(--amber);border-color:var(--amber);color:var(--teal)}
+  .card.done .cnum{color:var(--terracotta)}
+  @media(min-width:680px){.grid{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:600px){.journey{padding:26px 22px;gap:18px}.jtext h3{font-size:23px}}
+
+  /* overall conditional reflection */
+  .overall{background:var(--teal);color:#fff;border-radius:14px;padding:44px 36px;margin:32px 0}
+  .overall .eyebrow{font-family:var(--sans);font-size:12px;letter-spacing:.26em;text-transform:uppercase;color:var(--amber);margin-bottom:12px}
+  .overall h2{font-family:var(--serif);font-weight:500;font-size:30px;line-height:1.12;margin-bottom:12px;color:#fff}
+  .overall h2 em{font-style:italic;color:var(--blush)}
+  .overall p{color:rgba(255,255,255,.85);line-height:1.6;max-width:54ch}
+  .overall .ov-cta{margin-top:22px}
+  .overall .ov-cta a{display:inline-block;background:var(--amber);color:var(--teal);font-family:var(--sans);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:13px;padding:14px 26px;border-radius:6px;text-decoration:none;transition:.2s}
+  .overall .ov-cta a:hover{filter:brightness(1.06)}
+  .overall .ov-note{font-size:13px;color:rgba(255,255,255,.6);margin-top:10px;font-style:italic}
+
+  /* mobile */
+  @media(max-width:600px){
+    .topbar{padding:10px 14px;gap:10px}
+    .topbar .brand{display:none}
+    .progress-label{min-width:auto;font-size:11px}
+    .btn-amber,.reset-btn{padding:8px 11px;font-size:10px}
+    .wrap{padding:0 16px}
+    .cover{padding:64px 20px 58px}
+    .tool,.about,.faq-item,.pulse{padding:28px 22px}
+    .tool h2,.about h2,.pulse h2,.faq h2{font-size:25px}
+    .intro .lead{font-size:21px}
+    .scale{gap:6px}
+    .scale button{width:36px;height:36px;font-size:14px}
+    .matrix{grid-template-columns:1fr;gap:16px}
+    .cta-buttons{flex-direction:column}
+    .btn-cta,.btn-ghost{width:100%}
+    .step-nav{flex-wrap:wrap;gap:8px}
+    .nav-btn{flex:1;text-align:center}
+    .mascot{right:12px;bottom:12px;max-width:78vw}
+    .mascot-fig{width:52px;height:68px}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important;transition:none !important;scroll-behavior:auto !important}
+  }
+
+  @media print{
+    body{background:#fff}
+    [id^="tool-"],.home-only{display:block !important}
+    .topbar,.step-header,.step-nav,.faq,.cta-card,.res-card,.mascot,.tool-actions,.pulse,.analyzing,.journey,.grid{display:none !important}
+    .cover{padding:54px 24px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .cover,.readout,.close,.about{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .tool{break-inside:avoid;box-shadow:none;border-color:rgba(7,59,69,.25)}
+    input[type=text],textarea{background:#fff;border-color:#999}
+    .scale button.on{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="brand">Nijah Almond</span>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="pfill"></div></div>
+    <span class="progress-label" id="plabel">0% complete</span>
+  </div>
+  <nav class="topnav"><a href="#">Tools</a><a href="#faq">FAQ</a><a href="#about">About</a></nav>
+  <div class="topbar-actions">
+    <button class="btn-amber" id="printBtn">Print / Save PDF</button>
+    <button class="reset-btn" id="resetBtn">Reset</button>
+  </div>
+</div>
+
+<header class="cover home-only">
+  <div class="eyebrow">A companion to The Identity Reset</div>
+  <h1>The Identity<br><em>Audit</em> Workbook</h1>
+  <p class="sub">Nine tools to close the gap between the life you built and the woman you've become.</p>
+  <div class="meta">Keep it. Fill it. Come back to it.</div>
+</header>
+
+<main class="wrap">
+
+  <div class="step-header" id="stepHeader">
+    <a href="#" class="link-all">&larr; All tools</a>
+    <span class="step-count" id="stepCount"></span>
+  </div>
+
+  <section class="intro home-only">
+    <p class="lead">You did everything right. So why does something still feel off?</p>
+    <p>This workbook holds the nine tools from The Identity Reset, one per page. You do not need answers to use it. You need <strong>honesty</strong>. One tool a day, in the order the emails follow. Your work saves automatically as you type, so you can leave and come back.</p>
+    <p>Start where you are. Tell yourself the truth. That's the whole work.</p>
+  </section>
+
+  <section class="journey home-only" id="journey">
+    <div class="ring"><svg width="96" height="96" viewBox="0 0 96 96"><circle cx="48" cy="48" r="42" stroke="rgba(255,255,255,.16)" stroke-width="7" fill="none"/><circle id="ringFill" cx="48" cy="48" r="42" stroke="#F2B41A" stroke-width="7" fill="none" stroke-linecap="round" stroke-dasharray="264" stroke-dashoffset="264" transform="rotate(-90 48 48)"/></svg><div class="rtext" id="ringText">0/9</div></div>
+    <div class="jtext"><h3 id="jHead">Begin where you are</h3><p id="jSub">Nine tools. One a day. Tap a card to open it, and each one you finish lights up.</p></div>
+  </section>
+  <div class="grid home-only" id="toolGrid"></div>
+
+  <!-- TOOL 1 -->
+  <section class="tool" id="tool-1">
+    <div class="tool-head"><span class="tool-num">Tool 01</span><h2>Success Threshold Self-Check</h2></div>
+    <p class="frame">Before anything else, name where you actually are. Not where you think you should be. <em>Pick the honest one, not the acceptable one.</em></p>
+    <div class="field">
+      <label>Which is most true right now?</label>
+      <div class="choices" data-name="t1_choice">
+        <label class="choice"><input type="radio" name="t1_choice" value="A"><span>A. My life feels aligned.</span></label>
+        <label class="choice"><input type="radio" name="t1_choice" value="B"><span>B. Something feels off.</span></label>
+        <label class="choice"><input type="radio" name="t1_choice" value="C"><span>C. I know something needs to change.</span></label>
+        <label class="choice"><input type="radio" name="t1_choice" value="D"><span>D. I'm ready for my next chapter.</span></label>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOOL 2 -->
+  <section class="tool" id="tool-2">
+    <div class="tool-head"><span class="tool-num">Tool 02</span><h2>The Success Audit</h2></div>
+    <p class="frame">Success and fulfillment are different scoreboards. Name the gap between how your life looks and how it feels. The second line is the whole point.</p>
+    <div class="field"><label>My life looks successful because<span class="hint">(this comes easy)</span></label><textarea data-id="t2_looks"></textarea></div>
+    <div class="field"><label>What people don't see is<span class="hint">(write the true one, not the acceptable one)</span></label><textarea data-id="t2_unseen"></textarea></div>
+    <div class="field"><label>One word for what feels most off</label><input type="text" data-id="t2_word"></div>
+  </section>
+
+  <!-- TOOL 3 -->
+  <section class="tool" id="tool-3">
+    <div class="tool-head"><span class="tool-num">Tool 03</span><h2>The Exhaustion Decoder</h2></div>
+    <p class="frame">Burnout comes from doing too much. Identity exhaustion comes from being someone you've outgrown. <em>The "being" line is usually the loudest.</em></p>
+    <div class="field"><label>I'm tired of doing</label><textarea data-id="t3_doing"></textarea></div>
+    <div class="field"><label>I'm tired of managing</label><textarea data-id="t3_managing"></textarea></div>
+    <div class="field"><label>I'm tired of being</label><textarea data-id="t3_being"></textarea></div>
+    <div class="field"><label>The line that carries the most weight, and what I'm exhausted from pretending</label><textarea data-id="t3_weight"></textarea></div>
+  </section>
+
+  <!-- TOOL 4 -->
+  <section class="tool" id="tool-4">
+    <div class="tool-head"><span class="tool-num">Tool 04</span><h2>The Identity Gap Reflection</h2></div>
+    <p class="frame">The gap is the distance between who you are and who you've been performing as. Compare the two answers. Mark every difference. That space has a name.</p>
+    <div class="field"><label>The version of me that created my success is</label><textarea data-id="t4_was"></textarea></div>
+    <div class="field"><label>The version of me I'm becoming is</label><textarea data-id="t4_becoming"></textarea></div>
+    <div class="field"><label>One expectation I'm carrying that no longer fits</label><input type="text" data-id="t4_expectation"></div>
+  </section>
+
+  <!-- TOOL 5 -->
+  <section class="tool" id="tool-5">
+    <div class="tool-head"><span class="tool-num">Tool 05</span><h2>The Identity Gap Scorecard</h2></div>
+    <p class="frame">The signal isn't the problem. Explaining it away is. Rate each area honestly, not aspirationally. One to ten.</p>
+    <div data-rating-group>
+      <div class="rating" data-id="t5_career"><span class="rlabel">Career</span><div class="scale"></div></div>
+      <div class="rating" data-id="t5_relationships"><span class="rlabel">Relationships</span><div class="scale"></div></div>
+      <div class="rating" data-id="t5_health"><span class="rlabel">Body and health</span><div class="scale"></div></div>
+      <div class="rating" data-id="t5_purpose"><span class="rlabel">Purpose</span><div class="scale"></div></div>
+      <div class="rating" data-id="t5_expression"><span class="rlabel">Self-expression</span><div class="scale"></div></div>
+    </div>
+    <div class="field" style="margin-top:22px"><label>My lowest area, and the truth I've been avoiding there</label><textarea data-id="t5_truth"></textarea></div>
+  </section>
+
+  <!-- TOOL 6 -->
+  <section class="tool" id="tool-6">
+    <div class="tool-head"><span class="tool-num">Tool 06</span><h2>The Want List</h2></div>
+    <p class="frame">You stopped asking what you want and started asking what makes sense. Your desires are not distractions. They are data. No editing, no justifying.</p>
+    <div class="field"><label>I want more</label><textarea data-id="t6_more"></textarea></div>
+    <div class="field"><label>I want less</label><textarea data-id="t6_less"></textarea></div>
+    <div class="field"><label>I miss</label><textarea data-id="t6_miss"></textarea></div>
+    <div class="field"><label>If nobody judged me, I would</label><textarea data-id="t6_unjudged"></textarea></div>
+    <div class="field"><label>The answer that scares me most</label><input type="text" data-id="t6_scares"></div>
+  </section>
+
+  <!-- TOOL 7 -->
+  <section class="tool" id="tool-7">
+    <div class="tool-head"><span class="tool-num">Tool 07</span><h2>The Reinvent or Recommit Matrix</h2></div>
+    <p class="frame">The decision isn't stay or leave. It's reinvent or recommit. Fill both columns. Watch where your energy lifts, not where your logic argues.</p>
+    <div class="matrix">
+      <div class="col">
+        <h3>Reinvent</h3>
+        <div class="field"><label>What excites me</label><textarea data-id="t7_ri_excite"></textarea></div>
+        <div class="field"><label>What scares me</label><textarea data-id="t7_ri_scare"></textarea></div>
+        <div class="field"><label>What becomes possible</label><textarea data-id="t7_ri_possible"></textarea></div>
+        <div class="field"><label>What I would gain</label><textarea data-id="t7_ri_gain"></textarea></div>
+      </div>
+      <div class="col">
+        <h3>Recommit</h3>
+        <div class="field"><label>What excites me</label><textarea data-id="t7_rc_excite"></textarea></div>
+        <div class="field"><label>What scares me</label><textarea data-id="t7_rc_scare"></textarea></div>
+        <div class="field"><label>What becomes possible</label><textarea data-id="t7_rc_possible"></textarea></div>
+        <div class="field"><label>What I would gain</label><textarea data-id="t7_rc_gain"></textarea></div>
+      </div>
+    </div>
+    <div class="field" style="margin-top:18px"><label>If fear were not part of it, I would</label><input type="text" data-id="t7_iffear"></div>
+  </section>
+
+  <!-- TOOL 8 -->
+  <section class="tool" id="tool-8">
+    <div class="tool-head"><span class="tool-num">Tool 08</span><h2>The Self-Trust Audit</h2></div>
+    <p class="frame">Confidence says "I can do it." Self-trust says "I know what is true for me." It's built by honoring one thing you know, today.</p>
+    <div class="field"><label>Where in my life am I seeking permission instead of trusting myself?</label><textarea data-id="t8_permission"></textarea></div>
+    <div class="field"><label>One decision I already know the answer to, and have been waiting for someone to bless</label><textarea data-id="t8_know"></textarea></div>
+    <div class="field"><label>The smallest version of that decision I will act on before today ends</label><input type="text" data-id="t8_act"></div>
+  </section>
+
+  <!-- TOOL 9 -->
+  <section class="tool" id="tool-9">
+    <div class="tool-head"><span class="tool-num">Tool 09</span><h2>The Next Chapter Readiness Assessment</h2></div>
+    <p class="frame">Not why do I feel this way, but what do I do with it. Rate one to ten. Your score and what it means appear below.</p>
+    <div data-rating-group data-score="t9">
+      <div class="rating" data-id="t9_want"><span class="rlabel">I know what I want.</span><div class="scale"></div></div>
+      <div class="rating" data-id="t9_trust"><span class="rlabel">I trust myself.</span><div class="scale"></div></div>
+      <div class="rating" data-id="t9_change"><span class="rlabel">I know what needs to change.</span><div class="scale"></div></div>
+      <div class="rating" data-id="t9_path"><span class="rlabel">I have a clear path forward.</span><div class="scale"></div></div>
+      <div class="rating" data-id="t9_confident"><span class="rlabel">I feel confident making my next big decision.</span><div class="scale"></div></div>
+    </div>
+    <div class="readout">
+      <div><div class="num" id="t9_total">0</div></div>
+      <div class="band"><b id="t9_bandname">Add your score</b><span id="t9_banddesc">Rate all five to see what it means for you.</span></div>
+    </div>
+  </section>
+
+  <!-- BONUS -->
+  <section class="tool" id="tool-bonus">
+    <div class="tool-head"><span class="tool-num">Bonus</span><h2>Next Chapter Snapshot</h2></div>
+    <p class="frame">Not a plan. A direction. One honest sentence each.</p>
+    <div class="field"><label>In my next chapter, I want my career to feel</label><input type="text" data-id="ncs_career"></div>
+    <div class="field"><label>I want my relationships to feel</label><input type="text" data-id="ncs_relationships"></div>
+    <div class="field"><label>I want my purpose to feel</label><input type="text" data-id="ncs_purpose"></div>
+    <div class="field"><label>I want my legacy to be</label><input type="text" data-id="ncs_legacy"></div>
+    <div class="field"><label>My next chapter is calling me toward</label><textarea data-id="ncs_toward"></textarea></div>
+  </section>
+
+  <nav class="step-nav" id="stepNav">
+    <a class="nav-btn" id="prevBtn" href="#">&larr; Previous</a>
+    <a class="nav-all" href="#">All tools</a>
+    <a class="nav-btn" id="nextBtn" href="#">Next &rarr;</a>
+  </nav>
+
+  <div class="pull home-only">You are allowed to outgrow <span>a life you once wanted.</span></div>
+
+  <section class="close home-only">
+    <div class="eyebrow">Where this leaves you</div>
+    <h2>You are not starting over.<br>You are <em>returning to yourself.</em></h2>
+    <p>The next chapter is not built by the woman who got you here. It is built by the one you just spent these pages meeting.</p>
+  </section>
+
+  <section class="overall home-only" id="overall">
+    <div class="eyebrow">Your reflection so far</div>
+    <h2 id="ov_head">Your reflection will build here</h2>
+    <p id="ov_body">Open Tool 01 and tap Done. As you complete the tools, this becomes your own reflection, in Nijah's framing.</p>
+    <div id="ov_cta"></div>
+  </section>
+
+  <section class="pulse" id="pulse" style="display:none">
+    <div class="eyebrow">Optional</div>
+    <h2>Pulse check</h2>
+    <div class="optional">Completely voluntary. It comes straight to Nijah.</div>
+    <div class="preface">Before you fill this in, one thing. This was the first step, not the whole transformation. Nine pages cannot answer every question or hand you a finished life, and they were never meant to. This is the beginning, the first step to unlocking what comes next. So do not measure it by how much got resolved. Just notice what opened.</div>
+    <div class="field"><label>What was your biggest aha moment?</label><textarea data-id="pulse_aha"></textarea></div>
+    <div class="field"><label>What shifted or broke open for you?</label><textarea data-id="pulse_breakthrough"></textarea></div>
+    <div class="field"><label>Where do you still feel stuck?</label><textarea data-id="pulse_stuck"></textarea></div>
+    <div class="field"><label>What do you feel ready for next?</label><textarea data-id="pulse_ready"></textarea></div>
+    <div class="field"><label>What do you think you're still missing?</label><textarea data-id="pulse_missing"></textarea></div>
+    <div class="field"><label>Your name and email <span class="hint">(optional, so Nijah can reply)</span></label><input type="text" data-id="pulse_contact"></div>
+    <button class="done-btn" id="pulseSend" style="background:var(--amber);color:var(--teal)">Send my pulse check to Nijah</button>
+    <div class="pulse-sent" id="pulseSent">Thank you for telling the truth. Your pulse check is on its way to Nijah. Remember, this was the first step. Keep going.</div>
+  </section>
+
+  <section class="faq page" id="faq">
+    <a href="#" class="page-back">&larr; Back to workbook</a>
+    <h2>How to use this workbook</h2>
+    <p class="faq-sub">A few answers before you begin.</p>
+    <div class="faq-item">
+      <h3>How do I use it?</h3>
+      <p>One tool per day, in the order the emails follow. Each day's email opens one tool. Do that page before the next email arrives, and try not to skip ahead. One honest page a day is the whole method.</p>
+    </div>
+    <div class="faq-item">
+      <h3>Does my work save?</h3>
+      <p>Yes, automatically, in this browser on this device. Close it and come back anytime. Your answers are stored on your device, so they do not sync to other devices. If you want a copy you can keep anywhere, use Print and save it as a PDF.</p>
+    </div>
+    <div class="faq-item">
+      <h3>How do I print it or save a PDF?</h3>
+      <p>Use the Print / Save PDF button at the top right, or your browser's print command, then choose "Save as PDF." Printing shows the full workbook, all nine tools, with your typed answers included.</p>
+    </div>
+    <div class="faq-item">
+      <h3>What if I miss a day?</h3>
+      <p>Nothing breaks. The workbook waits. Pick it back up with one honest page when you can.</p>
+    </div>
+    <div class="faq-item">
+      <h3>I'm ready for more than a workbook. What's next?</h3>
+      <p>When you want company for the decision, a Next Chapter Clarity Conversation is the next step. The link is just below.</p>
+    </div>
+  </section>
+
+  <section class="about page" id="about">
+    <a href="#" class="page-back">&larr; Back to workbook</a>
+    <div class="eyebrow">About</div>
+    <h2>Nijah Almond</h2>
+    <p>Nijah Almond spent more than fifteen years in government and corporate leadership. She earned the degrees, the titles, and the life she was supposed to want. Diagnosed with lupus at nine, she learned early that time is not promised.</p>
+    <p>Decades later, in a room she had fought to get into, she realized the life she had built no longer reflected the woman she had become. She named that distance the identity gap. Today she helps high-performing executive women close it, so they can decide whether their next chapter calls for reinvention or recommitment, from truth instead of fear. This workbook is where it starts.</p>
+    <div class="contact">Email <a href="mailto:info@nijahalmond.com">info@nijahalmond.com</a> &nbsp;&middot;&nbsp; <a href="https://www.nijahalmond.com">nijahalmond.com</a></div>
+  </section>
+
+  <section class="cta-card home-only">
+    <div class="eyebrow">When you are ready</div>
+    <h2>You don't have to close the gap <em>alone.</em></h2>
+    <p>The workbook names it. A Next Chapter Clarity Conversation is thirty minutes to say the true thing out loud and decide what to do with it. No pressure, no pitch.</p>
+    <div class="cta-buttons">
+      <a class="btn-cta" href="https://calendly.com/nijah-almond/15min" target="_blank" rel="noopener">Book a Clarity Conversation</a>
+      <a class="btn-ghost" href="https://www.nijahalmond.com" target="_blank" rel="noopener">Visit nijahalmond.com</a>
+    </div>
+  </section>
+
+</main>
+
+<div class="mascot" id="mascot">
+  <div class="mascot-bubble" id="mascotBubble"></div>
+  <button class="mascot-fig" id="mascotFig" aria-label="Mira, your mirror guide">
+    <svg viewBox="0 0 62 80" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="mira-g" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#0C6373"/><stop offset="1" stop-color="#E8B7C5"/></linearGradient></defs>
+      <rect x="27" y="50" width="8" height="27" rx="4" fill="#085866"/>
+      <ellipse cx="31" cy="29" rx="28" ry="29" fill="#F2B41A"/>
+      <ellipse cx="31" cy="29" rx="22.5" ry="24" fill="url(#mira-g)"/>
+      <circle cx="23" cy="27" r="2.6" fill="#073B45"/>
+      <circle cx="39" cy="27" r="2.6" fill="#073B45"/>
+      <path d="M22 36 Q31 44 40 36" stroke="#073B45" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+      <path d="M17 17 q7 -5 13 -1" stroke="#fff" stroke-width="2" fill="none" opacity=".75" stroke-linecap="round"/>
+    </svg>
+  </button>
+</div>
+
+<footer>
+  <div class="fbrand">Nijah Almond</div>
+  <div>The Identity Reset &middot; The Identity Audit Workbook</div>
+  <div class="frow"><a href="https://www.nijahalmond.com" target="_blank" rel="noopener">nijahalmond.com</a> &nbsp;&middot;&nbsp; <a href="mailto:info@nijahalmond.com">info@nijahalmond.com</a></div>
+
+  <nav class="social-row" aria-label="Social media">
+    <a href="https://instagram.com/nijahalmond" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.4" cy="6.6" r="1.3"/></svg></a>
+    <a href="https://facebook.com/nijahalmond" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1V7.9c0-.9.25-1.5 1.55-1.5h1.65V3.6c-.3-.04-1.3-.1-2.45-.1-2.43 0-4 1.45-4 4.12V9.9H7.5V13h2.75v8h3.25z"/></svg></a>
+    <a href="https://youtube.com/@nijahalmondspeaks" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23 7.5c-.13-1-.55-1.7-1.5-1.95C19.8 5.1 12 5.1 12 5.1s-7.8 0-9.5.45C1.55 5.8 1.13 6.5 1 7.5.8 9 .8 12 .8 12s0 3 .2 4.5c.13 1 .55 1.7 1.5 1.95 1.7.45 9.5.45 9.5.45s7.8 0 9.5-.45c.95-.25 1.37-.95 1.5-1.95.2-1.5.2-4.5.2-4.5s0-3-.2-4.5zM9.8 15V9l5.2 3z"/></svg></a>
+    <a href="https://tiktok.com/@nijah.almond" target="_blank" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.6 3c.3 2.1 1.5 3.55 3.6 3.75v2.45c-1.25.05-2.55-.35-3.6-1.05v5.55c0 3.2-2.35 5.45-5.25 5.45-2.85 0-4.85-2.15-4.85-4.8 0-2.9 2.3-4.9 5.2-4.6v2.5c-.3-.1-.65-.15-1-.1-1.15.15-1.95.95-1.85 2.2.1 1.2 1 1.95 2.15 1.9 1.25-.05 2-1 2-2.35V3h3.6z"/></svg></a>
+    <a href="https://linkedin.com/in/nijahalmond" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.94 5a1.94 1.94 0 1 1-3.88 0 1.94 1.94 0 0 1 3.88 0zM3.4 8.4h3.06V21H3.4V8.4zm5.1 0h2.93v1.72h.04c.41-.78 1.4-1.6 2.9-1.6 3.1 0 3.67 2.04 3.67 4.7V21h-3.06v-5.66c0-1.35-.03-3.08-1.88-3.08-1.88 0-2.17 1.47-2.17 2.98V21H8.5V8.4z"/></svg></a>
+    <a href="https://open.substack.com/pub/nijahalmond" target="_blank" rel="noopener" aria-label="Substack"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v2.3H4V4zm0 4.2h16V21l-8-4.55L4 21V8.2z"/></svg></a>
+  </nav>
+
+  <div class="faddress">919 W 34th St #50278, SMB#84124<br>Baltimore, MD 21211</div>
+  <!-- TODO: replace with real Terms / Privacy URLs when pages exist -->
+  <div class="flegal"><a href="https://www.nijahalmond.com/terms-of-service" target="_blank" rel="noopener">Terms of Service</a> &nbsp;&middot;&nbsp; <a href="https://www.nijahalmond.com/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a></div>
+  <div class="fcopy">&copy; 2026 Nijah Almond Coaching &amp; Consultancy. All rights reserved.</div>
+</footer>
+
+<script>
+(function(){
+  var KEY='identity-audit-workbook-v1';
+  var store={}; try{store=JSON.parse(localStorage.getItem(KEY))||{}}catch(e){store={}}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(store))}catch(e){}}
+  function v(k){return (store[k]==null?'':(''+store[k])).trim()}
+  function clip(k,n){var s=v(k);return s.length>n?s.slice(0,n).replace(/\s+\S*$/,'')+'…':s}
+
+  /* ---- Mira the mascot ---- */
+  var bubble=document.getElementById('mascotBubble'),bTimer;
+  function say(html,ms){bubble.innerHTML=html;bubble.classList.add('show');clearTimeout(bTimer);if(ms)bTimer=setTimeout(function(){bubble.classList.remove('show')},ms)}
+  document.getElementById('mascotFig').addEventListener('click',function(){
+    say("I'm Mira. Fill a page, then tap <b>Done</b> and I'll read it back to you in Nijah's framing.",7000)});
+
+  /* ---- per-tool synthesis (uses their answers + Nijah's framework) ---- */
+  var STAGE={
+    A:{s:'The Aligned',t:'Right now your life and your truth are moving together. That is worth protecting. Use these tools to stay ahead of the drift, so success keeps feeling like yours as you grow.'},
+    B:{s:'The Fracture',t:'The cracks are just beginning. Something is starting not to fit, even if you cannot name it yet. This is the earliest and easiest place to do this work, and the tools ahead give you the language.'},
+    C:{s:'The Identity Gap',t:'Your outside and your inside have stopped matching. This is the heart of the work, and you are exactly where these tools were built for. Go slowly, and tell the truth.'},
+    D:{s:'The Decision Point',t:'You already know something needs to change. The question is no longer whether, it is what. Reinvent, or recommit. The tools ahead help you decide from truth instead of fear.'}
+  };
+  function lowestArea(){
+    var m={Career:'t5_career',Relationships:'t5_relationships','Body and health':'t5_health',Purpose:'t5_purpose','Self-expression':'t5_expression'};
+    var area=null,score=99,all=true;
+    for(var k in m){var val=parseInt(v(m[k]),10);if(!v(m[k])){all=false}else if(val<score){score=val;area=k}}
+    return all?{area:area,score:score}:null;
+  }
+  function theme(s){s=(s||'').toLowerCase();return{
+    work:/(job|jobs|work|working|career|boss|office|role|roles|promot|company|corporate|leadership|manager|director|executive|meeting|team)/.test(s),
+    rel:/(marriage|married|husband|wife|partner|spouse|relationship|divorce|dating|love)/.test(s),
+    family:/(kid|kids|child|children|mother|father|mom|dad|family|parent|son|daughter|caregiv)/.test(s),
+    body:/(health|body|sick|ill|illness|tired|exhaust|sleep|burn|pain|weight|energy)/.test(s),
+    money:/(money|salary|income|financ|security|afford|paycheck|bills|savings)/.test(s),
+    fear:/(afraid|scared|scare|fear|terrif|anxious|anxiety|worried|worry|nervous|panic|guilt|guilty|shame|ashamed)/.test(s),
+    leave:/(leave|leaving|quit|walk away|escape|resign|start over|new life)/.test(s),
+    stay:/(stay|staying|remain|keep going|hold on)/.test(s),
+    create:/(creat|artist|\bart\b|write|writing|writer|paint|music|design|build|launch|business)/.test(s),
+    freedom:/(freedom|\bfree\b|space|time|breathe|breath|rest|slow|peace|\bjoy\b|\bplay\b|travel)/.test(s),
+    purpose:/(purpose|meaning|matter|impact|legacy|calling|mission|contribut)/.test(s),
+    strong:/(strong|capable|reliable|responsible|perfect|together|achiev|the rock|dependable)/.test(s)
+  }}
+
+  function synth(id){
+    if(id==='tool-1'){var c=v('t1_choice');if(!c)return{need:'Pick the line that is most true, then tap Done.'};
+      var M={A:'Aligned. Rare and worth guarding.',B:'A fracture is the most honest place to start.',C:"You named it. That takes nerve.",D:'A threshold. Not bad news.'};
+      return{stage:STAGE[c].s,text:STAGE[c].t,mira:M[c]}}
+
+    if(id==='tool-2'){var looks=v('t2_looks'),unseen=v('t2_unseen'),word=v('t2_word');if(!unseen)return{need:'Write what people do not see, then tap Done. That line is the whole point.'};
+      var th=theme(unseen),txt='The space between '+(looks?'"'+clip('t2_looks',70)+'"':'how it looks')+' and "'+clip('t2_unseen',90)+'" is your Identity Gap, in your own words. ';
+      if(th.fear)txt+='Notice the guilt and fear sitting in it. That is the tax the good-daughter identity charges you for wanting more. It is not evidence you are wrong, it is evidence you have outgrown the rules.';
+      else if(th.body)txt+='What you hide is a tiredness sleep does not touch. That has a name in this work. Identity exhaustion, not burnout.';
+      else if(th.work)txt+='You are performing competence in the room and carrying the truth home alone. That is the Performance Trap doing exactly what it was built to do.';
+      else txt+='You are winning the achievement scoreboard while the fulfillment scoreboard goes unanswered. They were never the same game.';
+      if(word)txt+=' The word you reached for, "'+word+'", is the signal. Keep it close.';
+      return{stage:'Two Scoreboards',text:txt,mira:'The unseen line is where the truth lives.'}}
+
+    if(id==='tool-3'){var being=v('t3_being');if(!being)return{need:'Fill the lines, especially "tired of being," then tap Done.'};
+      var th=theme(being),txt='You are tired of being "'+clip('t3_being',80)+'." Read that back. That is identity exhaustion, and no amount of rest was ever going to reach it. ';
+      if(th.strong)txt+='Being the strong one is the most expensive costume to keep wearing, because everyone applauds you for never taking it off.';
+      else if(th.family)txt+='You have been the one who holds everyone. The question no one asks you is who holds you.';
+      else if(th.work)txt+='The role asked you to become someone, and you became her so completely that the line between the performance and you went quiet.';
+      else txt+='What drains you is not the doing. It is the being someone the life required and you have outgrown.';
+      if(v('t3_weight'))txt+=' What you are exhausted from pretending, "'+clip('t3_weight',70)+'", is the first thing to set down.';
+      return{stage:'Identity Exhaustion, not burnout',text:txt,mira:'Rest restores energy. Truth restores you.'}}
+
+    if(id==='tool-4'){var was=v('t4_was'),bec=v('t4_becoming');if(!was||!bec)return{need:'Fill both versions of you, then tap Done.'};
+      var tw=theme(was),tb=theme(bec),txt='The woman who built your success is "'+clip('t4_was',70)+'." The one emerging wants "'+clip('t4_becoming',70)+'." That distance is your Identity Gap. ';
+      if(tw.strong)txt+='She was built to earn, to perform, to be counted on. She was never built to be happy inside the life she made, and that is not a failure. It is the Success Threshold.';
+      else if(tb.create||tb.freedom||tb.purpose)txt+='What is emerging is not a smaller life. It is a truer one. That is worth more than it scares you.';
+      else txt+='You did not lose yourself. You adapted, one reasonable decision at a time, until the woman running your life stopped being the one living it.';
+      if(v('t4_expectation'))txt+=' The expectation you named, "'+clip('t4_expectation',60)+'", is the first brick to remove.';
+      return{stage:'Your Identity Gap, named',text:txt,mira:'Two women, one life. Now you can see the gap.'}}
+
+    if(id==='tool-5'){var lo=lowestArea();if(!lo)return{need:'Rate all five areas, then tap Done.'};
+      var sev=lo.score<=3?'is not whispering anymore. It is shouting, and you have been calling it stress.':lo.score<=6?'is whispering, and the whisper is the early, easiest signal to read.':'is the quietest of your five, and still the one to keep your eye on.';
+      var txt='Your lowest area is '+lo.area+' at '+lo.score+' out of ten. It '+sev+' ';
+      var A=lo.area;
+      if(A==='Relationships')txt+='When the gap surfaces here, it is usually the cost of managing a self that needs constant performing to be loved.';
+      else if(A==='Career')txt+='A low number here, after everything you built, is the Success Threshold in plain math. Achievement stopped paying what it used to.';
+      else if(A==='Body and health')txt+='Your body keeps the score your calendar refuses to. This number is honesty leaking out sideways.';
+      else if(A==='Purpose')txt+='A purpose gap is not a productivity problem. You cannot optimize your way out of a meaning one.';
+      else txt+='Low self-expression means the real you has been edited for the room for a very long time.';
+      if(v('t5_truth'))txt+=' The truth you named there, "'+clip('t5_truth',70)+'", is the work itself.';
+      return{stage:'Where the gap is loudest',text:txt,mira:lo.area+' is where I would start.'}}
+
+    if(id==='tool-6'){var any=v('t6_more')||v('t6_less')||v('t6_miss')||v('t6_unjudged');if(!any)return{need:'Write a few wants, then tap Done.'};
+      var th=theme(v('t6_more')+' '+v('t6_unjudged')+' '+v('t6_miss')),txt='You wrote what you want again, maybe for the first time in a while. ';
+      if(th.create)txt+='So much of this is about making something that is yours. That is not a hobby talking. That is the next chapter asking for room.';
+      else if(th.freedom)txt+='Most of what you want is space to breathe. You are not lazy or ungrateful. You are oxygen-starved.';
+      else if(th.rel||th.family)txt+='A lot of what you want is connection you have been too busy performing to actually receive.';
+      else txt+='These are not distractions. In this work, desire is data about who you are becoming.';
+      if(v('t6_scares'))txt+=' And the one that scared you, "'+clip('t6_scares',60)+'", is the compass needle. The want that frightens you is usually the one that is actually yours.';
+      return{stage:'Your desires are data',text:txt,mira:'The scary want is the honest one.'}}
+
+    if(id==='tool-7'){var ri=(v('t7_ri_excite')+v('t7_ri_scare')+v('t7_ri_possible')+v('t7_ri_gain')).length;var rc=(v('t7_rc_excite')+v('t7_rc_scare')+v('t7_rc_possible')+v('t7_rc_gain')).length;
+      if(ri+rc===0)return{need:'Fill at least one column, then tap Done.'};
+      var lean=ri>rc*1.2?'reinvention':rc>ri*1.2?'recommitment':null,txt='';
+      var tf=theme(v('t7_iffear'));
+      if(v('t7_iffear')){txt+='Without fear, you said you would "'+clip('t7_iffear',70)+'." ';
+        if(tf.leave)txt+='That reaches for change, and it is data, not recklessness. ';
+        else if(tf.stay)txt+='That reaches to stay, but differently. That is recommitment, and it is not settling. ';
+        else txt+='That is your truth speaking before fear edits it. ';}
+      if(lean)txt+='Your energy leaned toward '+lean+'. Not the final answer, the direction your body already knows. ';
+      txt+='The brave choice is never the dramatic one. It is the honest one, whichever door it opens.';
+      return{stage:'Reinvent or Recommit',text:txt,mira:lean?('Your energy chose '+lean+'.'):'Watch your energy, not your logic.'}}
+
+    if(id==='tool-8'){var know=v('t8_know');if(!know)return{need:'Name the decision you already know, then tap Done.'};
+      var th=theme(know),txt='You already know: "'+clip('t8_know',70)+'." You have been waiting for a permission that is not coming. ';
+      if(th.work||th.leave)txt+='You know the answer about the role. The not-knowing was never the problem. The not-trusting-yourself-to-act was.';
+      else if(th.rel||th.family)txt+='You know the answer about the relationship too. Knowing was never your weak spot. Trusting what you know has been.';
+      else txt+='This is the Self-Trust gap. Confidence says I can do it. Self-trust says I know what is true for me, and that is the one the rooms you grew up in quietly trained out of you.';
+      if(v('t8_act'))txt+=' The smallest honored version, "'+clip('t8_act',60)+'", is how self-trust is rebuilt. One kept promise to yourself, watched, repeated.';
+      else txt+=' Pick the smallest version of it and do that one thing before the day ends.';
+      return{stage:'Self-Trust, one act at a time',text:txt,mira:'You knew. You just needed to trust it.'}}
+
+    if(id==='tool-9'){var ids=['t9_want','t9_trust','t9_change','t9_path','t9_confident'],sum=0,a=0,low=null,lowv=99,lbl={t9_want:'knowing what you want',t9_trust:'self-trust',t9_change:'naming what must change',t9_path:'a clear path',t9_confident:'confidence to decide'};
+      ids.forEach(function(i){if(v(i)){var n=parseInt(v(i),10);sum+=n;a++;if(n<lowv){lowv=n;low=i}}});
+      if(a<5)return{need:'Rate all five, then tap Done.'};
+      var band,d;if(sum>=40){band='Clear and ready';d='Your next step is a decision, not more thinking.'}else if(sum>=30){band='Emerging clarity';d='The path is forming. Keep telling the truth on these pages.'}else if(sum>=20){band='The gap is present';d='This is the exact work, and you have already started it.'}else{band='A decision point';d='You are not behind. You have found where the work lives.'}
+      var txt='This measures your readiness to decide reinvention or recommitment. '+d+' Your lowest is '+lbl[low]+', and that is the one we build first.';
+      return{stage:sum+' / 50 — '+band,text:txt,mira:'Lowest: '+lbl[low]+'. That is the bridge.'}}
+
+    if(id==='tool-bonus'){var tw=v('ncs_toward');if(!tw)return{need:'Write what your next chapter is calling you toward, then tap Done.'};
+      var th=theme(tw),txt='Your next chapter is calling you toward "'+clip('ncs_toward',80)+'." ';
+      if(th.create||th.purpose)txt+='That is a building instinct. Protect it from the part of you that calls it impractical.';
+      else if(th.freedom)txt+='That is a reclaiming instinct. You are not running from your life. You are returning to it.';
+      else txt+='That is your compass. Let it filter the very next decision you make.';
+      return{stage:'Your compass',text:txt,mira:'Keep that where you can see it.'}}
+
+    return{need:'Tap Done when you have filled this page.'};
+  }
+
+  /* ---- inject Done button + explain panel into each tool ---- */
+  document.querySelectorAll('[id^="tool-"]').forEach(function(sec){
+    var id=sec.id;
+    var wrap=document.createElement('div');wrap.className='tool-actions';
+    var btn=document.createElement('button');btn.className='done-btn';btn.textContent='Done — show my reflection';
+    wrap.appendChild(btn);sec.appendChild(wrap);
+    var an=document.createElement('div');an.className='analyzing';an.style.display='none';
+    an.innerHTML='<span>Reading your answers</span><span class="dots"><i></i><i></i><i></i></span>';sec.appendChild(an);
+    var panel=document.createElement('div');panel.className='explain-panel';panel.hidden=true;
+    panel.innerHTML='<div class="ex-stage"></div><p class="ex-text"></p><div class="ex-note">This is a reflection, not a verdict. It is the first step.</div>';sec.appendChild(panel);
+
+    function render(animate){var r=synth(id);
+      if(r.need){panel.querySelector('.ex-stage').textContent='One more thing';panel.querySelector('.ex-text').textContent=r.need;panel.querySelector('.ex-note').style.display='none';}
+      else{panel.querySelector('.ex-stage').textContent=r.stage;panel.querySelector('.ex-text').textContent=r.text;panel.querySelector('.ex-note').style.display='';}
+      panel.hidden=false;if(!animate)panel.style.animation='none';else panel.style.animation='';
+    }
+    btn.addEventListener('click',function(){
+      var r=synth(id);
+      if(r.need){say('Fill the page first, then tap <b>Done</b>.',5000);render(false);return;}
+      panel.hidden=true;an.style.display='flex';say('Reading your answers',0);
+      setTimeout(function(){an.style.display='none';store['done_'+id]=true;save();render(true);updateJourney();say((r.mira||'There it is.')+' Tap <b>Next</b> when ready.',6000);},950);
+    });
+    sec._renderExplain=function(){if(store['done_'+id]){render(false)}};
+  });
+
+  /* ---- scales ---- */
+  document.querySelectorAll('.rating').forEach(function(row){
+    var id=row.getAttribute('data-id'),scale=row.querySelector('.scale');
+    for(var n=1;n<=10;n++){var b=document.createElement('button');b.type='button';b.textContent=n;b.setAttribute('data-val',n);
+      b.addEventListener('click',function(){var val=this.getAttribute('data-val');store[id]=val;
+        scale.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x.getAttribute('data-val')===val)});save();updateProgress();updateScore();});
+      scale.appendChild(b);}
+    if(store[id]){scale.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x.getAttribute('data-val')===store[id])})}
+  });
+
+  /* ---- text + radios ---- */
+  document.querySelectorAll('[data-id]').forEach(function(el){
+    if(el.classList.contains('rating'))return;
+    if((el.tagName==='INPUT'&&el.type==='text')||el.tagName==='TEXTAREA'){var id=el.getAttribute('data-id');if(store[id])el.value=store[id];
+      el.addEventListener('input',function(){store[id]=el.value;save();updateProgress()});}
+  });
+  document.querySelectorAll('.choices').forEach(function(group){var name=group.getAttribute('data-name');
+    group.querySelectorAll('input[type=radio]').forEach(function(r){if(store[name]===r.value){r.checked=true;r.closest('.choice').classList.add('sel')}
+      r.addEventListener('change',function(){store[name]=r.value;group.querySelectorAll('.choice').forEach(function(c){c.classList.remove('sel')});r.closest('.choice').classList.add('sel');save();updateProgress();});});
+  });
+
+  /* ---- readiness readout ---- */
+  function updateScore(){var ids=['t9_want','t9_trust','t9_change','t9_path','t9_confident'],sum=0,a=0;
+    ids.forEach(function(i){if(store[i]){sum+=parseInt(store[i],10);a++}});
+    var T=document.getElementById('t9_total');if(T)T.textContent=sum;
+    var name=document.getElementById('t9_bandname'),desc=document.getElementById('t9_banddesc');if(!name)return;
+    if(a<5){name.textContent='Add your score';desc.textContent='Rate all five to see what it means for you.';return}
+    var band,d;if(sum>=40){band='Clear and ready';d='You know what you want and trust yourself to move.'}else if(sum>=30){band='Emerging clarity';d='The picture is forming. Keep telling the truth.'}else if(sum>=20){band='The gap is present';d='This is the exact work, and you have already begun.'}else{band='A decision point';d='You are not behind. You have found where the work lives.'}
+    name.textContent=sum+' / 50 — '+band;desc.textContent=d;
+  }
+
+  /* ---- progress (excludes pulse fields) ---- */
+  function updateProgress(){var fields=[];
+    document.querySelectorAll('[data-id]').forEach(function(el){var id=el.classList.contains('rating')?el.getAttribute('data-id'):(((el.tagName==='INPUT'&&el.type==='text')||el.tagName==='TEXTAREA')?el.getAttribute('data-id'):null);
+      if(id&&id.indexOf('pulse_')!==0)fields.push(id);});
+    document.querySelectorAll('.choices').forEach(function(g){fields.push(g.getAttribute('data-name'))});
+    var total=fields.length,done=0;fields.forEach(function(f){if(store[f]&&(''+store[f]).trim()!=='')done++});
+    var pct=total?Math.round(done/total*100):0;document.getElementById('pfill').style.width=pct+'%';document.getElementById('plabel').textContent=pct+'% complete';overall();updateJourney();updatePulse();
+  }
+
+  /* ---- pulse check: send to Nijah (mailto for now; swap for form endpoint on deploy) ---- */
+  document.getElementById('pulseSend').addEventListener('click',function(){
+    var L=[['Aha moment','pulse_aha'],['Breakthrough','pulse_breakthrough'],['Stuck on','pulse_stuck'],['Ready for next','pulse_ready'],['Still missing','pulse_missing'],['Contact','pulse_contact']];
+    var body='Identity Reset Pulse Check\n\n';L.forEach(function(x){body+=x[0]+':\n'+(v(x[1])||'(blank)')+'\n\n'});
+    store['pulse_sent']=true;save();
+    document.getElementById('pulseSent').style.display='block';
+    window.location.href='mailto:info@nijahalmond.com?subject='+encodeURIComponent('Identity Reset Pulse Check')+'&body='+encodeURIComponent(body);
+    say('Thank you. That came straight to Nijah. <b>This was the first step.</b>',8000);
+  });
+
+  /* ---- overall conditional reflection (synthesizes across tools) ---- */
+  function overall(){
+    var head=document.getElementById('ov_head'),body=document.getElementById('ov_body'),cta=document.getElementById('ov_cta');
+    if(!head)return;
+    var stage=v('t1_choice');
+    var ids=['t9_want','t9_trust','t9_change','t9_path','t9_confident'],sum=0,a=0;ids.forEach(function(i){if(v(i)){sum+=parseInt(v(i),10);a++}});
+    var ready=a===5?sum:null,lo=lowestArea();
+    var key;
+    if(stage==='D'||(ready!==null&&ready<20))key='decision';
+    else if(stage==='A'||(ready!==null&&ready>=40))key='clear';
+    else if(stage||ready!==null||lo||v('t3_being')||v('t8_know'))key='gap';
+    else key='start';
+    var cal='https://calendly.com/nijah-almond/15min';
+    function c(note){return '<div class="ov-cta"><a href="'+cal+'" target="_blank" rel="noopener">Book a Clarity Conversation</a><div class="ov-note">'+note+'</div></div>'}
+    var area=lo?lo.area.toLowerCase():'';
+    if(key==='start'){head.textContent='Your reflection will build here';body.textContent="Open Tool 01 and tap Done. As you complete the tools, this becomes your own reflection, in Nijah's framing.";cta.innerHTML='';return}
+    if(key==='decision'){head.innerHTML='You are at a <em>decision point.</em>';body.textContent='You already know something needs to change'+(area?', and it is loudest in '+area:'')+'. This is the moment company helps most. A short Clarity Conversation is the next honest step.';cta.innerHTML=c('Thirty minutes. No pitch. Just truth.');return}
+    if(key==='clear'){head.innerHTML='You are clear, and <em>close.</em>';body.textContent='You know what you want and you trust yourself to move'+(area?'. Keep an eye on '+area:'')+'. Your next step is action, not more thinking. If you want to sharpen the plan, a Clarity Conversation will do it.';cta.innerHTML=c('Bring your Next Chapter Snapshot to the call.');return}
+    head.innerHTML='You are in the <em>gap,</em> and the work has started.';body.textContent='Something has stopped fitting'+(area?', and it is loudest in '+area:'')+'. That is not a problem to fix today. It is the truth to keep telling. When you want to go deeper than these pages, a Clarity Conversation is there.';cta.innerHTML=c('No rush. The door stays open.');
+  }
+
+  /* ---- gamified home grid ---- */
+  var TOOLS=[
+    {id:'tool-1',n:'01',t:'Success Threshold',d:'Name where you are'},
+    {id:'tool-2',n:'02',t:'The Success Audit',d:'Looks vs feels'},
+    {id:'tool-3',n:'03',t:'Exhaustion Decoder',d:'Burnout, or deeper'},
+    {id:'tool-4',n:'04',t:'Identity Gap Reflection',d:'Two versions of you'},
+    {id:'tool-5',n:'05',t:'Identity Gap Scorecard',d:'Where it is loudest'},
+    {id:'tool-6',n:'06',t:'The Want List',d:'What you actually want'},
+    {id:'tool-7',n:'07',t:'Reinvent or Recommit',d:'The real decision'},
+    {id:'tool-8',n:'08',t:'The Self-Trust Audit',d:'You already know'},
+    {id:'tool-9',n:'09',t:'Next Chapter Readiness',d:'Where you stand'},
+    {id:'tool-bonus',n:'\u2605',t:'Next Chapter Snapshot',d:'Your compass'}
+  ];
+  function renderGrid(){var g=document.getElementById('toolGrid');if(!g)return;var h='';TOOLS.forEach(function(o){var d=!!store['done_'+o.id];h+='<a class="card'+(d?' done':'')+'" href="#'+o.id+'"><span class="badge">\u2713</span><span class="cnum">'+o.n+'</span><h4>'+o.t+'</h4><p>'+o.d+'</p></a>'});g.innerHTML=h}
+  function updateJourney(){renderGrid();var core=TOOLS.slice(0,9),done=0;core.forEach(function(o){if(store['done_'+o.id])done++});
+    var rf=document.getElementById('ringFill'),rt=document.getElementById('ringText'),jh=document.getElementById('jHead'),js=document.getElementById('jSub');
+    if(rt)rt.textContent=done+'/9';if(rf)rf.style.strokeDashoffset=(264*(1-done/9)).toFixed(1);
+    var H,S;
+    if(done===0){H='Begin where you are';S='Nine tools. One a day. Tap a card to open it, and each one you finish lights up.'}
+    else if(done<3){H='You have started';S='The hardest part is the first honest page. Keep going.'}
+    else if(done<5){H='Finding your rhythm';S='You are building a map of yourself, in your own words.'}
+    else if(done<7){H='Past the middle';S='This is where it starts to connect.'}
+    else if(done<9){H='Almost there';S='The last pages are the ones most people skip. Not you.'}
+    else{H='All nine, done';S='Scroll down for your reflection and your pulse check.'}
+    if(jh)jh.textContent=H;if(js)js.textContent=S}
+
+  /* ---- single-tool router ---- */
+  var steps=['tool-1','tool-2','tool-3','tool-4','tool-5','tool-6','tool-7','tool-8','tool-9','tool-bonus'];
+  function updatePulse(){var h=(location.hash||'').replace(/^#/,'');var home=steps.indexOf(h)<0&&h!=='about'&&h!=='faq';var ps=document.getElementById('pulse');if(ps)ps.style.display=(home&&store['done_tool-9'])?'block':'none'}
+  function route(){var h=(location.hash||'').replace(/^#/,'');var idx=steps.indexOf(h),isTool=idx>=0;
+    var page=(h==='about'||h==='faq')?h:null,home=!isTool&&!page;
+    document.querySelectorAll('.home-only').forEach(function(e){e.style.display=home?'':'none'});
+    document.querySelectorAll('[id^="tool-"]').forEach(function(e){e.style.display='none'});
+    document.querySelectorAll('.page').forEach(function(e){e.style.display='none'});
+    var sh=document.getElementById('stepHeader'),sn=document.getElementById('stepNav');
+    sh.style.display=isTool?'flex':'none';sn.style.display=isTool?'flex':'none';
+    if(page){var pg=document.getElementById(page);if(pg)pg.style.display='block'}
+    if(isTool){var el=document.getElementById(h);el.style.display='block';el.classList.remove('tool-anim');void el.offsetWidth;el.classList.add('tool-anim');
+      document.getElementById('stepCount').textContent='Tool '+(idx+1)+' of '+steps.length;
+      var prev=steps[idx-1],next=steps[idx+1],pb=document.getElementById('prevBtn'),nb=document.getElementById('nextBtn');
+      if(prev){pb.style.visibility='visible';pb.setAttribute('href','#'+prev)}else{pb.style.visibility='hidden'}
+      if(next){nb.style.visibility='visible';nb.setAttribute('href','#'+next)}else{nb.style.visibility='hidden'}
+      if(el._renderExplain)el._renderExplain();
+    }
+    overall();updateJourney();updatePulse();window.scrollTo(0,0);
+  }
+  window.addEventListener('hashchange',route);
+
+  document.getElementById('printBtn').addEventListener('click',function(){window.print()});
+  document.getElementById('resetBtn').addEventListener('click',function(){if(confirm('Clear everything in this workbook? This cannot be undone.')){store={};save();location.hash='';location.reload()}});
+
+  updateScore();updateProgress();route();
+  setTimeout(function(){if(location.hash)return;var seen=false;for(var k in store){if(k.indexOf('done_')===0||(store[k]&&(''+store[k]).trim())){seen=true;break}}say(seen?"Welcome back. Your work is right where you left it.":"Hi, I'm <b>Mira</b>. One page a day. Tap <b>Done</b> and I'll read it back to you in Nijah's framing.",8000)},1200);
+})();
+</script>
+</body>
+</html>
