@@ -346,7 +346,7 @@
     <div class="progress-track"><div class="progress-fill" id="pfill"></div></div>
     <span class="progress-label" id="plabel">0% complete</span>
   </div>
-  <nav class="topnav"><a href="#">Tools</a><a href="#faq">FAQ</a><a href="https://nijah-almond-about.vercel.app" target="_blank" rel="noopener">About &#8599;</a></nav>
+  <nav class="topnav"><a href="#">Home</a><a href="#tools">All Tools</a><a href="#faq">FAQ</a><a href="https://nijah-almond-about.vercel.app" target="_blank" rel="noopener">About &#8599;</a></nav>
   <div class="topbar-actions">
     <button class="reset-btn" id="printBtn">Print</button>
     <button class="btn-amber" id="savePdfBtn">Save PDF</button>
@@ -367,6 +367,10 @@
     <a href="#" class="link-all">&larr; All tools</a>
     <span class="step-count" id="stepCount"></span>
   </div>
+  <div class="step-header" id="allHeader" style="display:none">
+    <a href="#" class="link-all">&larr; Home</a>
+    <span class="step-count">All tools</span>
+  </div>
 
   <section class="intro home-only">
     <p class="lead">You did everything right. So why does something still feel off?</p>
@@ -382,7 +386,6 @@
       <!-- TODO: replace href="#" with the welcome video URL when ready -->
       <li><a href="#" id="welcomeVideo"><span class="dia">&#9670;</span> Watch the Welcome Aboard Video <span class="arrow">&rarr;</span></a></li>
       <li><a href="https://viral-strategies.com/library" target="_blank" rel="noopener"><span class="dia">&#9670;</span> Course tools <span class="arrow">&rarr;</span></a></li>
-      <li><a href="https://www.skool.com/the-legacy-lounge-free-7046/about?ref=4aecf50ea0e64eb0924b177d6890a1fb" target="_blank" rel="noopener"><span class="dia">&#9670;</span> Legacy Lounge Community <span class="arrow">&rarr;</span></a></li>
     </ul>
   </section>
 
@@ -509,8 +512,16 @@
     </div>
   </section>
 
-  <!-- BONUS -->
-  <section class="tool" id="tool-bonus">
+  <nav class="step-nav" id="stepNav">
+    <a class="nav-btn" id="prevBtn" href="#">&larr; Previous</a>
+    <a class="nav-all" href="#">All tools</a>
+    <a class="nav-btn" id="nextBtn" href="#">Next &rarr;</a>
+  </nav>
+
+  <div class="pull home-only">You are allowed to outgrow <span>a life you once wanted.</span></div>
+
+  <!-- Next Chapter grand finale (home view, under the pull quote) -->
+  <section class="tool home-only" id="tool-bonus">
     <div class="finale-lock">
       <div class="lock-ic">&#128274;</div>
       <div class="lk-eyebrow">The grand finale, sealed</div>
@@ -531,14 +542,6 @@
       <div class="field"><label>My next chapter is calling me toward</label><textarea data-id="ncs_toward"></textarea></div>
     </div>
   </section>
-
-  <nav class="step-nav" id="stepNav">
-    <a class="nav-btn" id="prevBtn" href="#">&larr; Previous</a>
-    <a class="nav-all" href="#">All tools</a>
-    <a class="nav-btn" id="nextBtn" href="#">Next &rarr;</a>
-  </nav>
-
-  <div class="pull home-only">You are allowed to outgrow <span>a life you once wanted.</span></div>
 
   <section class="close home-only">
     <div class="eyebrow">Where this leaves you</div>
@@ -898,8 +901,7 @@
     {id:'tool-6',n:'06',t:'The Want List',d:'What you actually want'},
     {id:'tool-7',n:'07',t:'Reinvent or Recommit',d:'The real decision'},
     {id:'tool-8',n:'08',t:'The Self-Trust Audit',d:'You already know'},
-    {id:'tool-9',n:'09',t:'Next Chapter Readiness',d:'Where you stand'},
-    {id:'tool-bonus',n:'\u2605',t:'Next Chapter Snapshot',d:'Your compass'}
+    {id:'tool-9',n:'09',t:'Next Chapter Readiness',d:'Where you stand'}
   ];
   function coreDone(){for(var i=1;i<=9;i++){if(!store['done_tool-'+i])return false}return true}
   function coreCount(){var n=0;for(var i=1;i<=9;i++){if(store['done_tool-'+i])n++}return n}
@@ -923,15 +925,17 @@
     if(jh)jh.textContent=H;if(js)js.textContent=S}
 
   /* ---- single-tool router ---- */
-  var steps=['tool-1','tool-2','tool-3','tool-4','tool-5','tool-6','tool-7','tool-8','tool-9','tool-bonus'];
+  var steps=['tool-1','tool-2','tool-3','tool-4','tool-5','tool-6','tool-7','tool-8','tool-9'];
   function updatePulse(){var h=(location.hash||'').replace(/^#/,'');var home=steps.indexOf(h)<0&&h!=='about'&&h!=='faq';var ps=document.getElementById('pulse');if(ps)ps.style.display=(home&&store['done_tool-9'])?'block':'none'}
   function route(){var h=(location.hash||'').replace(/^#/,'');var idx=steps.indexOf(h),isTool=idx>=0;
-    var page=(h==='about'||h==='faq')?h:null,home=!isTool&&!page;
+    var all=h==='tools';
+    var page=(h==='about'||h==='faq')?h:null,home=!isTool&&!page&&!all;
     document.querySelectorAll('.home-only').forEach(function(e){e.style.display=home?'':'none'});
-    document.querySelectorAll('[id^="tool-"]').forEach(function(e){e.style.display='none'});
+    document.querySelectorAll('[id^="tool-"]').forEach(function(e){if(e.id!=='tool-bonus')e.style.display='none'});
     document.querySelectorAll('.page').forEach(function(e){e.style.display='none'});
-    var sh=document.getElementById('stepHeader'),sn=document.getElementById('stepNav');
-    sh.style.display=isTool?'flex':'none';sn.style.display=isTool?'flex':'none';
+    var sh=document.getElementById('stepHeader'),sn=document.getElementById('stepNav'),ah=document.getElementById('allHeader');
+    sh.style.display=isTool?'flex':'none';sn.style.display=isTool?'flex':'none';if(ah)ah.style.display=all?'flex':'none';
+    if(all){document.querySelectorAll('[id^="tool-"]').forEach(function(e){e.style.display='block';if(e._renderExplain)e._renderExplain();});}
     if(page){var pg=document.getElementById(page);if(pg)pg.style.display='block'}
     if(isTool){var el=document.getElementById(h);el.style.display='block';el.classList.remove('tool-anim');void el.offsetWidth;el.classList.add('tool-anim');
       document.getElementById('stepCount').textContent='Tool '+(idx+1)+' of '+steps.length;
