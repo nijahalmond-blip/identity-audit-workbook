@@ -137,6 +137,11 @@
   .faq h2{font-family:var(--serif);font-weight:600;font-size:32px;color:var(--teal);text-align:center;margin-bottom:6px}
   .faq .faq-sub{text-align:center;color:rgba(var(--ink-rgb),.6);font-size:14px;margin-bottom:26px}
   .faq-item{background:var(--white);border:1px solid rgba(var(--line-rgb),.1);border-radius:12px;padding:22px 26px;margin:12px 0}
+  .faq-item summary{list-style:none;cursor:pointer;font-family:var(--sans);font-size:16px;font-weight:700;color:var(--teal-mid);display:flex;justify-content:space-between;align-items:center;gap:16px}
+  .faq-item summary::-webkit-details-marker{display:none}
+  .faq-item summary::after{content:"+";font-size:22px;color:var(--amber);line-height:1;flex:none}
+  .faq-item[open] summary::after{content:"\2013"}
+  .faq-item[open] summary{margin-bottom:10px}
   .faq-item h3{font-family:var(--sans);font-size:16px;font-weight:700;color:var(--teal-mid);margin-bottom:8px}
   .faq-item p{font-size:15px;color:rgba(var(--ink-rgb),.82)}
 
@@ -660,26 +665,50 @@
     <a href="#" class="page-back">&larr; Back to workbook</a>
     <h2>How to use this workbook</h2>
     <p class="faq-sub">A few answers before you begin.</p>
-    <div class="faq-item">
-      <h3>How do I use it?</h3>
+    <details class="faq-item">
+      <summary>How do I use it?</summary>
       <p>One tool per day, in the order the emails follow. Each day's email opens one tool. Do that page before the next email arrives, and try not to skip ahead. One honest page a day is the whole method.</p>
-    </div>
-    <div class="faq-item">
-      <h3>Does my work save?</h3>
+    </details>
+    <details class="faq-item">
+      <summary>Does my work save?</summary>
       <p>Yes, automatically, in this browser on this device. Close it and come back anytime. Your answers are stored on your device, so they do not sync to other devices. If you want a copy you can keep anywhere, use Print and save it as a PDF.</p>
-    </div>
-    <div class="faq-item">
-      <h3>How do I print it or save a PDF?</h3>
+    </details>
+    <details class="faq-item">
+      <summary>How do I print it or save a PDF?</summary>
       <p>Use the Print / Save PDF button at the top right, or your browser's print command, then choose "Save as PDF." Printing shows the full workbook, all nine tools, with your typed answers included.</p>
-    </div>
-    <div class="faq-item">
-      <h3>What if I miss a day?</h3>
+    </details>
+    <details class="faq-item">
+      <summary>What if I miss a day?</summary>
       <p>Nothing breaks. The workbook waits. Pick it back up with one honest page when you can.</p>
-    </div>
-    <div class="faq-item">
-      <h3>I'm ready for more than a workbook. What's next?</h3>
+    </details>
+    <details class="faq-item">
+      <summary>I'm ready for more than a workbook. What's next?</summary>
       <p>When you want company for the decision, a Next Chapter Clarity Conversation is the next step. The link is just below.</p>
-    </div>
+    </details>
+    <details class="faq-item">
+      <summary>What is The Identity Reset?</summary>
+      <p>A free 9-day email course. Nine mistakes keeping you in a life that looks right and feels off, one a day. This workbook is its companion, holding all nine tools in one place.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Is this therapy?</summary>
+      <p>No. This is identity work. Therapy looks back to heal. This looks at who you have been performing as and who you actually are, and closes that gap. It is not productivity or mindset coaching either. Different problem, different tool.</p>
+    </details>
+    <details class="faq-item">
+      <summary>What if I can't name what's wrong?</summary>
+      <p>You do not need to name it first. Most women who start here cannot explain what is wrong, only that something is off. Naming it is the work. These tools are built to help you put words to it.</p>
+    </details>
+    <details class="faq-item">
+      <summary>I don't have time for this.</summary>
+      <p>This is built for women with no spare time. It is ten honest minutes a day. The point is alignment, not more on your plate.</p>
+    </details>
+    <details class="faq-item">
+      <summary>How is this different from other coaching?</summary>
+      <p>Most coaching treats the symptom: burnout, discipline, strategy, mindset. This treats the cause, which is identity. You cannot optimize your way out of an identity problem. That is the whole difference, and it is why the other things did not hold.</p>
+    </details>
+    <details class="faq-item">
+      <summary>I have another question.</summary>
+      <p>Email <a href="mailto:info@nijahalmond.com">info@nijahalmond.com</a> and Nijah's team will get back to you.</p>
+    </details>
   </section>
 
   <section class="about page" id="about">
